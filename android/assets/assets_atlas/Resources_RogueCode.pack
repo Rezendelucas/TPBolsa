@@ -1,0 +1,47 @@
+
+Resources_RogueCode.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+cement
+  rotate: false
+  xy: 1, 60
+  size: 71, 66
+  orig: 71, 66
+  offset: 0, 0
+  index: -1
+c_ground
+  rotate: false
+  xy: 74, 60
+  size: 71, 66
+  orig: 71, 66
+  offset: 0, 0
+  index: -1
+p_donw
+  rotate: false
+  xy: 1, 1
+  size: 32, 57
+  orig: 32, 57
+  offset: 0, 0
+  index: -1
+p_left
+  rotate: false
+  xy: 147, 69
+  size: 32, 57
+  orig: 32, 57
+  offset: 0, 0
+  index: -1
+p_right
+  rotate: false
+  xy: 35, 1
+  size: 32, 57
+  orig: 32, 57
+  offset: 0, 0
+  index: -1
+p_up
+  rotate: false
+  xy: 181, 69
+  size: 32, 57
+  orig: 32, 57
+  offset: 0, 0
+  index: -1
