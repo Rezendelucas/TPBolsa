@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 
+import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.UtilsPack.Constants;
 
 /**
@@ -19,8 +20,7 @@ import com.mygdx.game.UtilsPack.Constants;
 public class Assets implements Disposable, AssetErrorListener {
 
     public static final String Tag = Assets.class.getName();
-    public static final Assets instance = new Assets();
-
+    private static Assets instance = null;
 
 
     private AssetManager assetManager;
@@ -28,9 +28,16 @@ public class Assets implements Disposable, AssetErrorListener {
     public AssetPlayer jogador;
     public AssetMap ground;
     public AssetMap wall;
+    public AssetObject torch;
     public TextureAtlas atlas;
 
 
+    public static Assets getInstance() {
+        if (instance == null) {
+            instance = new Assets();
+        }
+        return instance;
+    }
 
     private Assets() {};
 
@@ -52,6 +59,7 @@ public class Assets implements Disposable, AssetErrorListener {
         jogador = new AssetPlayer(atlas);
         ground = new  AssetMap(atlas);
         wall = new AssetMap(atlas);
+        torch = new AssetObject(atlas);
     }
 
     @Override
@@ -119,6 +127,15 @@ public class Assets implements Disposable, AssetErrorListener {
         }
     }
 
+    public class AssetObject {
+        public final TextureRegion torch_off;
+        public final TextureRegion torch_on;
+        public AssetObject(TextureAtlas atlas) {
+            torch_on  = new TextureRegion(atlas.findRegion("Tocha"),73,5,20,80);
+            torch_off = new TextureRegion(atlas.findRegion("Tocha"),25,5,20,80);
+        }
+    }
+
     public class AssetFonts {
         public final BitmapFont defaultSmall;
         public final BitmapFont defaultNormal;
@@ -138,7 +155,6 @@ public class Assets implements Disposable, AssetErrorListener {
         }
 
     }
-
 
 }
 

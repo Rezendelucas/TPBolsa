@@ -25,6 +25,7 @@ public abstract class AbstractGameObject {
     public Vector2 friction;
     public Vector2 acceleration;
     public Rectangle bounds;
+    public Boolean solidObject;
 
     public AbstractGameObject(){
         position = new Vector2(0,0);
@@ -37,6 +38,7 @@ public abstract class AbstractGameObject {
         friction = new Vector2();
         acceleration = new Vector2();
         bounds = new Rectangle();
+        solidObject = false;
     }
 
     protected void updateMotionX (float delta) {

@@ -80,14 +80,14 @@ public class WorldRenderer implements Disposable {
         float x = -15;
         float y = -15;
         //batch.draw();
-        Assets.instance.fontes.defaultBig.draw(batch,"" + worldController.getScore(),x+75,y+37);
+        Assets.getInstance().fontes.defaultBig.draw(batch,"" + worldController.getScore(),x+75,y+37);
     }
 
     private void renderGuiFpsCounter (SpriteBatch batch) {
         float x = cameraGUI.viewportWidth - 55;
         float y = cameraGUI.viewportHeight - 15;
         int fps = Gdx.graphics.getFramesPerSecond();
-        BitmapFont fpsFont = Assets.instance.fontes.defaultNormal;
+        BitmapFont fpsFont = Assets.getInstance().fontes.defaultNormal;
         if (fps >= 45) {
             fpsFont.setColor(0, 1, 0, 1);//verde
         } else if (fps >= 30) {

@@ -11,7 +11,7 @@ public class Wall extends AbstractGameObject {
 
     public static final String TAG = Wall.class.getName();
     private TextureRegion regTexture;
-    private Boolean solidObject = true;
+
 
 
     public Wall(TextureRegion texture) {
@@ -23,6 +23,7 @@ public class Wall extends AbstractGameObject {
         origin.set(dimension.x/2,dimension.y/2);
         rotation = 0;
         bounds.set(0, 0, dimension.x, dimension.y); //seta caixa de colisao
+        solidObject = true;
         regTexture = texture;
     }
 

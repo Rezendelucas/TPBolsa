@@ -31,14 +31,14 @@ public class GuiScreen extends ScreenAdapter {
     private final TextButton btnPaused;
     private final TextButton btnReset;
     private static boolean start = false;
-    private  boolean debug = false;
+    private  boolean debug = true;
 
     public GuiScreen(){
         stage.setDebugAll(debug);
         Gdx.input.setInputProcessor(stage);
 
         grimoire = new List<Object>(skin);
-        grimoire.setItems("Avancar","Virar a Direita","Virar a Esquerda");
+        grimoire.setItems("Avancar","Virar a Direita","Virar a Esquerda","Atear Fogo");
         //spell = new List<Object>(skin);
         spell.setItems();
         quests = new List<String>(skin);
@@ -53,29 +53,32 @@ public class GuiScreen extends ScreenAdapter {
         lblSpell = new Label("Spell",skin);
         lblQuests = new Label("Quests",skin);
 
-        table.add(lblQuests).fill().row();
-        table.add(quests).expand().fill().row();
+        lblGrimoire.setFontScale(1.5f);
+        lblSpell.setFontScale(1.5f);
 
-        table.add(lblGrimoire).width(150).left().fill();
-        table.add(lblSpell).width(150).right().fill().row();
+        table.add(lblQuests).width(300).left().fill().row();
+        table.add(quests).width(300).height(100).top().left().expand().fill().row();
 
-        table.add(grimoire).width(150).left().expand().fill();
-        table.add(spell).width(150).right().expand().fill().row();
+        table.add(lblGrimoire).width(300).left().fill();
+        table.add(lblSpell).width(300).right().fill().row();
+
+        table.add(grimoire).width(300).height(450).top().left().expand().fill();
+        table.add(spell).width(300).height(450).top().right().expand().fill().row();
 
 
         btnStart = new TextButton("START", skin);
         btnStart.setSize(150,50);
-        btnStart.setPosition(1000,620);
+        btnStart.setPosition(1100,650);
         stage.addActor(btnStart);
 
         btnPaused = new TextButton("PAUSE", skin);
         btnPaused.setSize(150,50);
-        btnPaused.setPosition(1000,530);
+        btnPaused.setPosition(1100,590);
         stage.addActor(btnPaused);
 
         btnReset = new TextButton("RESET", skin);
         btnReset.setSize(150,50);
-        btnReset.setPosition(840,620);
+        btnReset.setPosition(940,650);
         stage.addActor(btnReset);
 
         btnStart.addListener(new ChangeListener() {

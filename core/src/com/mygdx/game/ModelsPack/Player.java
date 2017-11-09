@@ -2,6 +2,7 @@ package com.mygdx.game.ModelsPack;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.LevelPack.LevelHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class Player extends AbstractGameObject {
         origin.set(dimension.x/2,dimension.y/2);
         rotation = 0;
         bounds.set(0, 0, dimension.x, dimension.y); //seta caixa de colisao
-        regTexture = Assets.instance.jogador.idle_right;
+        regTexture = Assets.getInstance().jogador.idle_right;
     }
 
     @Override
@@ -67,7 +68,7 @@ public class Player extends AbstractGameObject {
                             //render(drawBatch);
                             break;
                         case 5:
-                            //inicia ciclo
+                            acender_Fogo();
                             break;
                         case 6:
                             //final ciclo
@@ -85,22 +86,22 @@ public class Player extends AbstractGameObject {
             put("Virar a Direita",2);
             put("Virar a Esquerda",3);
             put("Golpe simples",4);
-            put("Begin",5);
+            put("Atear Fogo",5);
             put("END",6);
         }
     };
 
     private void movimento_Frente() {
-        if(rotation == 0 && !WallHelper.getInstance().searchWall(position.x + 1, position.y)) {//direita
+        if(rotation == 0 && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y, 0)) {//direita
             position.set(getPosition().x + movePlayerX, getPosition().y +0);
         }else if(rotation == 90 || rotation == -270) {
-            if(!WallHelper.getInstance().searchWall(position.x, position.y + 1))//cima
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y + 1, 0))//cima
                 position.set(getPosition().x + 0, getPosition().y + movePlayerY);
         }else if(rotation == 180 || rotation == -180) {
-            if(!WallHelper.getInstance().searchWall(position.x - 1, position.y))//esquerda
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1,(int)position.y, 0))//esquerda
             position.set(getPosition().x -  movePlayerY, getPosition().y + 0);
         }else if(rotation == -90 || rotation == 270) {
-            if(!WallHelper.getInstance().searchWall(position.x, position.y - 1))//baixo
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y -1, 0))//baixo
             position.set(getPosition().x + 0, getPosition().y - movePlayerX);
         }
         System.out.print("Movimento a frente! \n");
@@ -115,8 +116,6 @@ public class Player extends AbstractGameObject {
         jogadorSetTexture();
         System.out.print("giro a direita! \n");
     }
-
-
 
     private void girar_Esquerda() {
         //position.set(getPosition().x - movePlayerX,getPosition().y + 0);
@@ -134,16 +133,37 @@ public class Player extends AbstractGameObject {
 
     private void jogadorSetTexture() {
         if(rotation == 0)
-             regTexture = Assets.instance.jogador.idle_right;
+             regTexture = Assets.getInstance().jogador.idle_right;
         else if(rotation == 90 || rotation == -270)
-                regTexture = Assets.instance.jogador.idle_up;
+                regTexture = Assets.getInstance().jogador.idle_up;
         else if(rotation == -90 || rotation == 270)
-                regTexture = Assets.instance.jogador.idle_donw;
+                regTexture = Assets.getInstance().jogador.idle_donw;
         else if(rotation == 180 || rotation == -180)
-            regTexture = Assets.instance.jogador.idle_left;
+            regTexture = Assets.getInstance().jogador.idle_left;
     }
 
-
-
+    private void acender_Fogo() {
+        if(rotation == 0 && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y, 10)) {//procura uma pira de fogo a direita(cod 10)
+            LevelHelper.getInstance().getTocha().switch_State();
+            System.out.print("pira acessa a direita");
+        }else if(rotation == 90 || rotation == -270) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x, (int)position.y + 1, 10)) {//cima
+                LevelHelper.getInstance().getTocha().switch_State();
+                System.out.print("pira acessa a frente");
+            }
+        }else if(rotation == 180 || rotation == -180) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1, (int)position.y, 10)) {//esquerda
+                LevelHelper.getInstance().getTocha().switch_State();
+                System.out.print("pira acessa a esquerda");
+            }
+        }else if(rotation == -90 || rotation == 270) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x, (int)position.y - 1, 10)) {//baixo
+                LevelHelper.getInstance().getTocha().switch_State();
+                System.out.print("pira acessa abaixo");
+            }
+        }else
+            System.out.print("nenhuma Pira encontrada");
+        System.out.print("pira nao acessa");
+    }
 
 }

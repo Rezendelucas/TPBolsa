@@ -18,7 +18,7 @@ public class GameMain extends Game {
     @Override
     public void create () {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        Assets.instance.init(new AssetManager());
+        Assets.getInstance().init(new AssetManager());
         setScreen(new MenuScreen(this));
     }
 

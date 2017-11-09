@@ -1,4 +1,6 @@
-package com.mygdx.game.ModelsPack;
+package com.mygdx.game.LevelPack;
+
+import com.mygdx.game.ModelsPack.Ground;
 
 import java.util.ArrayList;
 import java.util.List;
