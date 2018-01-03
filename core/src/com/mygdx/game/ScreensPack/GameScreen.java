@@ -4,6 +4,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.mygdx.game.UtilsPack.Constants;
 import com.mygdx.game.WorldController;
 import com.mygdx.game.WorldRenderer;
 
@@ -16,6 +18,7 @@ public class GameScreen extends AbstractGameScreen {
 
     private WorldController worldController;
     private WorldRenderer worldRenderer;
+    private static final Skin skin =  new Skin(Gdx.files.internal(Constants.UISKIN));
     private boolean paused;
 
     public GameScreen(Game game){
@@ -24,9 +27,8 @@ public class GameScreen extends AbstractGameScreen {
 
     @Override
     public void show() {
-        worldController = new WorldController(game);
+        worldController = new WorldController(game, skin);
         worldRenderer = new WorldRenderer(worldController);
-       // Gdx.input.setCatchBackKey(true);  ///????
     }
 
     @Override
@@ -48,7 +50,6 @@ public class GameScreen extends AbstractGameScreen {
     @Override
     public void hide() {
         worldRenderer.dispose();
-        //Gdx.input.setCatchBackKey(false);
     }
 
     @Override

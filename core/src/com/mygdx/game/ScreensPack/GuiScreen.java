@@ -15,18 +15,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 
 import com.mygdx.game.UtilsPack.Constants;
 
+import java.awt.Font;
+
 public class GuiScreen extends ScreenAdapter {
     private static final String TAG = GuiScreen.class.getName();
 
-    private static final Skin skin =  new Skin(Gdx.files.internal(Constants.UISKIN));
+    public static final Skin skin =  new Skin(Gdx.files.internal(Constants.UISKIN));
     private Stage stage = new Stage();
-    private final List<Object> grimoire;
-    private static final List<Object> spell = new List<Object>(skin);;
+    private final List<String> grimoire;
+    private static final List<String> spell = new List<String>(skin);;
     private final List<String> quests;
     private final Table table;
     private final Label lblGrimoire;
     private final Label lblSpell;
-    private final Label lblQuests;
+    //private final Label lblQuests;
     private final TextButton btnStart;
     private final TextButton btnPaused;
     private final TextButton btnReset;
@@ -37,48 +39,57 @@ public class GuiScreen extends ScreenAdapter {
         stage.setDebugAll(debug);
         Gdx.input.setInputProcessor(stage);
 
-        grimoire = new List<Object>(skin);
+        grimoire = new List<String>(skin);
         grimoire.setItems("Avancar","Virar a Direita","Virar a Esquerda","Atear Fogo");
         //spell = new List<Object>(skin);
         spell.setItems();
         quests = new List<String>(skin);
-        quests.setItems("nenhuma quest registrada!!!");
+        //quests.setItems("nenhuma quest registrada!!!");
+
 
         table = new Table(skin);
-        table.setFillParent(true);
+        //table.setFillParent(true);
+        table.setPosition(10,10);
+        table.setSize(1260,500);
         stage.addActor(table);
+        //table.defaults();
 
-        table.defaults();
         lblGrimoire = new Label("Grimorio", skin);
         lblSpell = new Label("Spell",skin);
-        lblQuests = new Label("Quests",skin);
+        //lblQuests = new Label("Quests",skin);
+;
 
-        lblGrimoire.setFontScale(1.5f);
-        lblSpell.setFontScale(1.5f);
+        lblGrimoire.setFontScale(2,2);
+        lblGrimoire.setAlignment(20,2);
+        lblSpell.setFontScale(2,2);
+        lblSpell.setAlignment(20,2);
 
-        table.add(lblQuests).width(300).left().fill().row();
-        table.add(quests).width(300).height(100).top().left().expand().fill().row();
+        //table.add(lblQuests).width(300).left().fill().row();
+        //table.add(quests).width(300).height(100).top().left().expand().fill().row();
 
-        table.add(lblGrimoire).width(300).left().fill();
-        table.add(lblSpell).width(300).right().fill().row();
+        table.add(lblGrimoire).width(350);
+        table.add().width(560).fill();
+        table.add(lblSpell).width(350).row();
 
-        table.add(grimoire).width(300).height(450).top().left().expand().fill();
-        table.add(spell).width(300).height(450).top().right().expand().fill().row();
+
+        table.add(grimoire).width(350).expand().top().fill();
+        table.add().width(560).fill();
+        table.add(spell).width(350).top().expand().fill().row();
 
 
         btnStart = new TextButton("START", skin);
+        btnStart.setPosition(560,660);
         btnStart.setSize(150,50);
-        btnStart.setPosition(1100,650);
         stage.addActor(btnStart);
 
         btnPaused = new TextButton("PAUSE", skin);
+        btnPaused.setPosition(560,600);
         btnPaused.setSize(150,50);
-        btnPaused.setPosition(1100,590);
         stage.addActor(btnPaused);
 
         btnReset = new TextButton("RESET", skin);
+        btnReset.setPosition(560,540);
         btnReset.setSize(150,50);
-        btnReset.setPosition(940,650);
         stage.addActor(btnReset);
 
         btnStart.addListener(new ChangeListener() {
@@ -125,6 +136,8 @@ public class GuiScreen extends ScreenAdapter {
                 payload.setValidDragActor(new Label(item + " (\"Adcionar spell\")", skin));
                 return payload;
             }
+
+
 
             @Override
             public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target) {
@@ -179,7 +192,7 @@ public class GuiScreen extends ScreenAdapter {
 
 
     }
-    public static List<Object> pullComands() {
+    public static List<String> pullComands() {
         return spell;
     }
 

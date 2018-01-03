@@ -6,7 +6,9 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.utils.Timer;
 
 import com.mygdx.game.ModelsPack.AbstractGameObject;
 import com.mygdx.game.ModelsPack.Assets;
@@ -19,6 +21,7 @@ import com.mygdx.game.ScreensPack.GuiScreen;
 
 import static com.mygdx.game.ScreensPack.GuiScreen.isStart;
 import static com.mygdx.game.ScreensPack.GuiScreen.setStart;
+import static com.mygdx.game.ScreensPack.GuiScreen.skin;
 
 
 /**
@@ -31,6 +34,7 @@ public class Level extends ScreenAdapter {
 
     private final Stage stage;
     private int[][] currente_Level;
+    private int level;
     private float sizeX;
     private float sizeY;
     private int totalComandos = 0;
@@ -38,13 +42,14 @@ public class Level extends ScreenAdapter {
     private AbstractGameObject obj;
     private Player player;
     private Torch objetivo;
-    private TextureAtlas atlas;
 
-    public Level(){
+
+    public Level(int level){
+        this.level = level;
         stage = new Stage();
         sizeX = 1f;
         sizeY = 1f;
-        currente_Level = LevelHelper.getInstance().getCurrent_Level();
+        currente_Level = LevelHelper.getInstance().getCurrent_Level(level);
         initMap();
     }
 
@@ -181,33 +186,30 @@ public class Level extends ScreenAdapter {
     }
 
     public void update (float deltaTime) {
-        List<Object> list;
+        final List<String> list;
             try {
                 list = GuiScreen.pullComands();
                 totalComandos = list.getItems().size;
-                if(isStart()) {
-                //for (int i = 0; i < list.getItems().size; i++) {
-                    int wait = 50000;
+                comandosRealizados = 0;
+                while(isStart()) {
+                    int wait = 5000;
                     while (wait > 0) {
-                        if (wait == 50000) {
+                        if (wait == 5000) {
                             player.comandos(player.Parse.get(list.getItems().get(comandosRealizados)));
                             comandosRealizados++;
-                            //list.getItems().removeIndex(1);
                             wait--;
-                            //render(deltaTime,batch);
                         }else{
-                            System.out.print("Em espera! \n");
+                            System.out.print("espera ocupada! \n");
                             wait--;
                         }
                     }
                     if(comandosRealizados == totalComandos){
                         setStart();
                         comandosRealizados = 0;
-                        System.out.print("Final de comando \n");
                     }
                 }
             }catch (Exception e){
-                System.out.print("Erro ao capturar fila de comandos \n");
+                System.out.print("Erro ao capturar comandos \n");
             }
         }
 
@@ -228,5 +230,9 @@ public class Level extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    public boolean isCompleteObjective() {
+        return objetivo.isTorch_On();
     }
 }

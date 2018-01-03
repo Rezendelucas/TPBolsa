@@ -34,6 +34,10 @@ public class WallHelper {
         return false;
     }
 
+    public void dropWall(){
+        walls.clear();
+    }
+
     public Wall getWall(int i){
         return walls.get(i);
     }

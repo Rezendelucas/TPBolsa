@@ -6,8 +6,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.mygdx.game.LevelPack.GroundHelper;
 import com.mygdx.game.LevelPack.Level;
+import com.mygdx.game.LevelPack.WallHelper;
 import com.mygdx.game.ScreensPack.MenuScreen;
+
+import sun.rmi.runtime.Log;
 
 
 /**
@@ -22,10 +29,12 @@ public class WorldController extends InputAdapter {
     private Level currenteLevel;
     private int score;
     private Game game;
+    private Skin skin;
+    private int level = 0;
 
-
-    public WorldController(Game game){
+    public WorldController(Game game, Skin skin){
         this.game = game;
+        this.skin = skin;
         init();
     }
 
@@ -37,12 +46,18 @@ public class WorldController extends InputAdapter {
 
     private void initLevel(){
         score = 0;
-        currenteLevel = new Level();
+        currenteLevel = new Level(level);
     }
 
     ////////////////////////////////////// Update //////////////////////////////////////////////
 
     public void update(float delta){
+        if(currenteLevel.isCompleteObjective()){
+            level++;
+            WallHelper.getInstance().dropWall();
+            GroundHelper.getInstance().dropGround();
+            currenteLevel = new Level(level);
+        }
         currenteLevel.update(delta);
         camera.update();
     }

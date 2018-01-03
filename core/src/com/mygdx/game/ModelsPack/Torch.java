@@ -26,10 +26,13 @@ public class Torch extends AbstractGameObject{
     }
 
     public void switch_State(){
-            if(torch_On)
+            if(torch_On) {
                 regTexture = Assets.getInstance().torch.torch_off;
-            else
+                torch_On = false;
+            }else{
                 regTexture = Assets.getInstance().torch.torch_on;
+                torch_On = true;
+            }
     }
 
     @Override
@@ -47,5 +50,9 @@ public class Torch extends AbstractGameObject{
                 reg.getRegionWidth(), reg.getRegionHeight(),
                 false, false);
 
+    }
+
+    public boolean isTorch_On() {
+        return torch_On;
     }
 }

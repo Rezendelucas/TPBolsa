@@ -25,6 +25,10 @@ public class GroundHelper {
         grounds.add(ground);
     }
 
+    public void dropGround(){
+        grounds.clear();
+    }
+
     public Ground getGround(int i){
         return grounds.get(i);
     }
