@@ -190,11 +190,10 @@ public class Level extends ScreenAdapter {
             try {
                 list = GuiScreen.pullComands();
                 totalComandos = list.getItems().size;
-                comandosRealizados = 0;
-                while(isStart()) {
-                    int wait = 5000;
+                if(isStart()) {
+                    int wait = 50000;
                     while (wait > 0) {
-                        if (wait == 5000) {
+                        if (wait == 50000) {
                             player.comandos(player.Parse.get(list.getItems().get(comandosRealizados)));
                             comandosRealizados++;
                             wait--;

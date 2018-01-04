@@ -30,6 +30,7 @@ public class Assets implements Disposable, AssetErrorListener {
     public AssetMap wall;
     public AssetObject torch;
     public TextureAtlas atlas;
+    public AssetIcon icons;
 
 
     public static Assets getInstance() {
@@ -60,6 +61,7 @@ public class Assets implements Disposable, AssetErrorListener {
         ground = new  AssetMap(atlas);
         wall = new AssetMap(atlas);
         torch = new AssetObject(atlas);
+        icons = new AssetIcon(atlas);
     }
 
     @Override
@@ -136,6 +138,32 @@ public class Assets implements Disposable, AssetErrorListener {
         }
     }
 
+    private class AssetIcon {
+        public final TextureRegion iconMana;
+        public final TextureRegion iconCura;
+        public final TextureRegion iconTocha;
+        public final TextureRegion iconEsculdo;
+        public final TextureRegion iconSalto;
+        public final TextureRegion iconManaoff;
+        public final TextureRegion iconCuraoff;
+        public final TextureRegion iconTochaoff;
+        public final TextureRegion iconEsculdooff;
+        public final TextureRegion iconSaltooff;
+
+        public AssetIcon(TextureAtlas atlas){
+            iconMana = new TextureRegion(atlas.findRegion("spells"),191,0,49,45);
+            iconCura = new TextureRegion(atlas.findRegion("spells"),0,0,49,45);
+            iconTocha = new TextureRegion(atlas.findRegion("spells"),49,0,47,45);
+            iconEsculdo = new TextureRegion(atlas.findRegion("spells"),98,0,47,45);
+            iconSalto = new TextureRegion(atlas.findRegion("spells"),146,0,47,45);
+            iconManaoff = new TextureRegion(atlas.findRegion("spellsOff"),191,0,49,45);
+            iconCuraoff = new TextureRegion(atlas.findRegion("spellsOff"),0,0,49,45);
+            iconTochaoff = new TextureRegion(atlas.findRegion("spellsOff"),49,0,47,45);
+            iconEsculdooff = new TextureRegion(atlas.findRegion("spellsOff"),98,0,47,45);
+            iconSaltooff = new TextureRegion(atlas.findRegion("spellsOff"),146,0,47,45);
+        }
+    }
+
     public class AssetFonts {
         public final BitmapFont defaultSmall;
         public final BitmapFont defaultNormal;
@@ -156,5 +184,35 @@ public class Assets implements Disposable, AssetErrorListener {
 
     }
 
+    public TextureRegion getIconMana(){
+        return icons.iconMana;
+    }
+    public TextureRegion getIconCura(){
+        return icons.iconCura;
+    }
+    public TextureRegion getIconTocha(){
+        return icons.iconTocha;
+    }
+    public TextureRegion getIconEsculo(){
+        return icons.iconEsculdo;
+    }
+    public TextureRegion getIconSalto(){
+        return icons.iconSalto;
+    }
+    public TextureRegion getIconManaOff(){
+        return icons.iconManaoff;
+    }
+    public TextureRegion getIconCuraOff(){
+        return icons.iconCuraoff;
+    }
+    public TextureRegion getIconTochaOff(){
+        return icons.iconTochaoff;
+    }
+    public TextureRegion getIconEsculoOff(){
+        return icons.iconEsculdooff;
+    }
+    public TextureRegion getIconSaltoOff(){
+        return icons.iconSaltooff;
+    }
 }
 

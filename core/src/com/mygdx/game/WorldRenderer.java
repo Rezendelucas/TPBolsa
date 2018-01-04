@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Disposable;
 
+import com.mygdx.game.LevelPack.Level;
+import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.ModelsPack.Assets;
 import com.mygdx.game.ScreensPack.GuiScreen;
 import com.mygdx.game.UtilsPack.Constants;
@@ -45,7 +47,12 @@ public class WorldRenderer implements Disposable {
 
     public void render(float delta){
         renderWorld(delta);
-        renderGui(batch,delta);
+        renderGui(batch);
+        renderControlGui(delta);
+    }
+
+    private void renderControlGui(float delta) {
+        gui.render(delta);
     }
 
     private void renderWorld(float delta){
@@ -67,13 +74,32 @@ public class WorldRenderer implements Disposable {
         cameraGUI.update();
     }
 
-    private void renderGui (SpriteBatch batch, float delta) {
+    private void renderGui (SpriteBatch batch) {
         batch.setProjectionMatrix(cameraGUI.combined);
         batch.begin();
         //renderGuiScore(batch);
-        gui.render(delta);
+        if(worldController.isGameover()){
+            renderGameOverMensage(batch);
+        }
+        renderGuiMana(batch);
+        renderSkils(batch);
         renderGuiFpsCounter(batch);
         batch.end();
+    }
+
+    private void renderSkils(SpriteBatch batch) {
+        Assets.getInstance().fontes.defaultBig.draw(batch, " Powers ", 10, 75);
+        if(true){//LevelHelper.getInstance().tochaDisponivel()) {
+            batch.draw(Assets.getInstance().getIconTocha(), -20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+        }else{
+            batch.draw(Assets.getInstance().getIconTochaOff(), -20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+        }
+        batch.draw(Assets.getInstance().getIconEsculoOff(), 20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+        batch.draw(Assets.getInstance().getIconSaltoOff(), 60, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+    }
+
+    private void renderGameOverMensage(SpriteBatch batch) {
+        Assets.getInstance().fontes.defaultBig.draw(batch," GAME OVER  ",120,80);
     }
 
     private void renderGuiScore(SpriteBatch batch){
@@ -83,9 +109,18 @@ public class WorldRenderer implements Disposable {
         Assets.getInstance().fontes.defaultBig.draw(batch,"" + worldController.getScore(),x+75,y+37);
     }
 
+    private void renderGuiMana(SpriteBatch batch){
+        if(LevelHelper.getInstance().getPlayer().getMana() > 0) {
+            batch.draw(Assets.getInstance().getIconMana(), -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+        }else{
+            batch.draw(Assets.getInstance().getIconManaOff(), -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+        }
+        Assets.getInstance().fontes.defaultBig.draw(batch, "" + LevelHelper.getInstance().getPlayer().getMana(), 13, 50);
+    }
+
     private void renderGuiFpsCounter (SpriteBatch batch) {
-        float x = cameraGUI.viewportWidth - 55;
-        float y = cameraGUI.viewportHeight - 15;
+        float x = 5;
+        float y = 5;
         int fps = Gdx.graphics.getFramesPerSecond();
         BitmapFont fpsFont = Assets.getInstance().fontes.defaultNormal;
         if (fps >= 45) {

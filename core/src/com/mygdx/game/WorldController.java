@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.LevelPack.GroundHelper;
 import com.mygdx.game.LevelPack.Level;
+import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.LevelPack.WallHelper;
 import com.mygdx.game.ScreensPack.MenuScreen;
 
@@ -30,6 +31,7 @@ public class WorldController extends InputAdapter {
     private int score;
     private Game game;
     private Skin skin;
+    private boolean gameover = false;
     private int level = 0;
 
     public WorldController(Game game, Skin skin){
@@ -49,14 +51,30 @@ public class WorldController extends InputAdapter {
         currenteLevel = new Level(level);
     }
 
+    public void timeStop(int time){
+        while(time > 0){
+            System.out.print("espera ocupada! \n");
+            time--;
+        }
+    }
+
     ////////////////////////////////////// Update //////////////////////////////////////////////
 
     public void update(float delta){
-        if(currenteLevel.isCompleteObjective()){
+        if(gameover){
+            timeStop(999999);
+            game.setScreen(new MenuScreen(game));
+        }
+        if(currenteLevel.isCompleteObjective()){//verifica caso vitoria avança proxima fase
+            timeStop(500000);
             level++;
             WallHelper.getInstance().dropWall();
             GroundHelper.getInstance().dropGround();
             currenteLevel = new Level(level);
+        }
+        if(LevelHelper.getInstance().getPlayer().getMana() <= 0){//verifica mana e outras condiçoes de game over
+            setGameover(true);
+            //reseta mundo
         }
         currenteLevel.update(delta);
         camera.update();
@@ -85,6 +103,14 @@ public class WorldController extends InputAdapter {
 
     public int getScore() {
         return score;
+    }
+
+    public boolean isGameover() {
+        return gameover;
+    }
+
+    public void setGameover(boolean gameover) {
+        this.gameover = gameover;
     }
 }
 

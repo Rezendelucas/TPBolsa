@@ -3,6 +3,7 @@ package com.mygdx.game.ModelsPack;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.LevelPack.LevelHelper;
+import com.mygdx.game.WorldController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +14,16 @@ import java.util.Map;
 
 public class Player extends AbstractGameObject {
 
+    private static final int DIREITA = 0;
+    private static final int BAIXO = 1;
+    private static final int ESQUERDA = 2;
+    private static final int CIMA = 3;
+    
     public static final String TAG = Player.class.getName();
     private TextureRegion regTexture;
+    private int mana = 100;
+    private int direçao = 0;
+    private boolean tochaDisponivel = false;
     private float movePlayerX = 1;
     private float movePlayerY = 1;
 
@@ -52,23 +61,37 @@ public class Player extends AbstractGameObject {
     public void comandos(int comando) {
                     switch (comando) {
                         case 1:
+                            verificaDirecao();
+                            if(getMana() < 10){break;}
                             movimento_Frente();
-                            //render(drawBatch);
+                            verificaFrente();
+                            setMana(10);
                             break;
                         case 2:
+                            verificaDirecao();
+                            if(getMana() < 10){break;}
                             girar_Direita();
-                            //render(drawBatch);
+                            verificaFrente();
+                            setMana(10);
                             break;
                         case 3:
+                            verificaDirecao();
+                            if(getMana() < 10){break;}
                             girar_Esquerda();
-                            //render(drawBatch);
+                            verificaFrente();
+                            setMana(10);
                             break;
                         case 4:
+                            verificaDirecao();
                             movimento_Ataque();
                             //render(drawBatch);
                             break;
                         case 5:
+                            verificaDirecao();
+                            if(getMana() < 50){break;}
                             acender_Fogo();
+                            verificaFrente();
+                            setMana(50);
                             break;
                         case 6:
                             //final ciclo
@@ -79,30 +102,47 @@ public class Player extends AbstractGameObject {
                     }
     }
 
+    private void verificaFrente() {
+    }
+
+    private void verificaDirecao() {
+        if(rotation == 0)
+            direçao = DIREITA;
+        else if(rotation == 90 || rotation == -270)
+            direçao = CIMA;
+        else if(rotation == -90 || rotation == 270)
+            direçao = BAIXO;
+        else if(rotation == 180 || rotation == -180)
+            direçao= ESQUERDA;
+    }
+
 
     public Map<String , Integer> Parse = new HashMap<String , Integer>(){
         {
-            put("Avancar",1);
-            put("Virar a Direita",2);
-            put("Virar a Esquerda",3);
-            put("Golpe simples",4);
-            put("Atear Fogo",5);
+            put("Avancar - 10 mana",1);
+            put("Virar a Direita - 10 mana",2);
+            put("Virar a Esquerda - 10 mana",3);
+            put("Golpe simples - 10 mana",4);
+            put("Atear Fogo - 50 mana",5);
             put("END",6);
         }
     };
 
     private void movimento_Frente() {
-        if(rotation == 0 && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y, 0)) {//direita
+        if(direçao == DIREITA && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y)) {//direita
             position.set(getPosition().x + movePlayerX, getPosition().y +0);
-        }else if(rotation == 90 || rotation == -270) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y + 1, 0))//cima
+        }else if(direçao == CIMA) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y + 1)){//cima
                 position.set(getPosition().x + 0, getPosition().y + movePlayerY);
-        }else if(rotation == 180 || rotation == -180) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1,(int)position.y, 0))//esquerda
-            position.set(getPosition().x -  movePlayerY, getPosition().y + 0);
-        }else if(rotation == -90 || rotation == 270) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y -1, 0))//baixo
-            position.set(getPosition().x + 0, getPosition().y - movePlayerX);
+            }
+        }else if(direçao == ESQUERDA) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1,(int)position.y)){//esquerda
+                position.set(getPosition().x -  movePlayerY, getPosition().y + 0);
+            }
+        }else if(direçao == BAIXO) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y -1)){//baixo
+                position.set(getPosition().x + 0, getPosition().y - movePlayerX);
+            }
         }
         System.out.print("Movimento a frente! \n");
     }
@@ -127,10 +167,6 @@ public class Player extends AbstractGameObject {
         System.out.print("giro a esquerda! \n");
     }
 
-    private void movimento_Ataque() {
-        System.out.print("Ataque efetuado \n!");
-    }
-
     private void jogadorSetTexture() {
         if(rotation == 0)
              regTexture = Assets.getInstance().jogador.idle_right;
@@ -141,6 +177,10 @@ public class Player extends AbstractGameObject {
         else if(rotation == 180 || rotation == -180)
             regTexture = Assets.getInstance().jogador.idle_left;
     }
+
+    private void movimento_Ataque() {
+        System.out.print("Ataque efetuado \n!");
+    }//Nao implementado;
 
     private void acender_Fogo() {
         if(rotation == 0 && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y, 10)) {//procura uma pira de fogo a direita(cod 10)
@@ -164,6 +204,14 @@ public class Player extends AbstractGameObject {
         }else
             System.out.print("nenhuma Pira encontrada");
         System.out.print("pira nao acessa");
+    }
+
+    public int getMana() {
+        return mana;
+    }
+
+    public void setMana(int valor){
+        mana = mana - valor;
     }
 
 }

@@ -2,6 +2,8 @@ package com.mygdx.game.ScreensPack;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 
+import com.mygdx.game.ModelsPack.Assets;
 import com.mygdx.game.UtilsPack.Constants;
 
 import java.awt.Font;
@@ -40,7 +43,7 @@ public class GuiScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
 
         grimoire = new List<String>(skin);
-        grimoire.setItems("Avancar","Virar a Direita","Virar a Esquerda","Atear Fogo");
+        grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana");
         //spell = new List<Object>(skin);
         spell.setItems();
         quests = new List<String>(skin);
@@ -189,7 +192,6 @@ public class GuiScreen extends ScreenAdapter {
                 //spell.getItems().removeIndex(spell.getSelectedIndex());
             }
         });
-
 
     }
     public static List<String> pullComands() {

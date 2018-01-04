@@ -12,6 +12,10 @@ import com.mygdx.game.ModelsPack.Wall;
 
 public class LevelHelper {
     private static LevelHelper instance = null;
+
+    private static int spawn = 9;
+    private static int livre = 0;
+
     private Player player;
     private Torch tocha;
     private int[][] level_00 = new int[][]{
@@ -87,8 +91,15 @@ public class LevelHelper {
         return null;
     }
 
-    public boolean getObjectInCoordinates(int x, int y, int objeto){
-        if(level_00[x+5][y+7] == objeto)
+    public boolean getObjectInCoordinates(int x, int y){
+        if(level_00[x+5][y+7] == livre ||  level_00[x+5][y+7] == spawn )
+            return true;
+        else
+            return false;
+    }
+
+    public boolean getObjectInCoordinates(int x, int y, int object){
+        if(level_00[x+5][y+7] == object )
             return true;
         else
             return false;
