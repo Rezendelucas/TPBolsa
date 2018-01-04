@@ -129,22 +129,20 @@ public class Player extends AbstractGameObject {
     };
 
     private void movimento_Frente() {
-        if(direçao == DIREITA && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y)) {//direita
+        if(rotation == 0 && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y, 0)) {//direita
             position.set(getPosition().x + movePlayerX, getPosition().y +0);
-        }else if(direçao == CIMA) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y + 1)){//cima
+        }else if(rotation == 90 || rotation == -270) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y + 1, 0))//cima
                 position.set(getPosition().x + 0, getPosition().y + movePlayerY);
-            }
-        }else if(direçao == ESQUERDA) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1,(int)position.y)){//esquerda
+        }else if(rotation == 180 || rotation == -180) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1,(int)position.y, 0))//esquerda
                 position.set(getPosition().x -  movePlayerY, getPosition().y + 0);
-            }
-        }else if(direçao == BAIXO) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y -1)){//baixo
+        }else if(rotation == -90 || rotation == 270) {
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y -1, 0))//baixo
                 position.set(getPosition().x + 0, getPosition().y - movePlayerX);
-            }
         }
         System.out.print("Movimento a frente! \n");
+
     }
 
     private void girar_Direita() {

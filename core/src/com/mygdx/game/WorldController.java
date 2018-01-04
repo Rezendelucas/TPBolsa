@@ -51,10 +51,10 @@ public class WorldController extends InputAdapter {
         currenteLevel = new Level(level);
     }
 
-    public void timeStop(int time){
+    public void timeStop(int time, float delta){
         while(time > 0){
             System.out.print("espera ocupada! \n");
-            time--;
+            time = (int)(time - (1*delta));
         }
     }
 
@@ -62,11 +62,11 @@ public class WorldController extends InputAdapter {
 
     public void update(float delta){
         if(gameover){
-            timeStop(999999);
+            timeStop(500,delta);//999999
             game.setScreen(new MenuScreen(game));
         }
         if(currenteLevel.isCompleteObjective()){//verifica caso vitoria avança proxima fase
-            timeStop(500000);
+            timeStop(500,delta);//500000
             level++;
             WallHelper.getInstance().dropWall();
             GroundHelper.getInstance().dropGround();

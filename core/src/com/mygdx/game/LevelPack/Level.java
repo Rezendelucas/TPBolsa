@@ -191,7 +191,7 @@ public class Level extends ScreenAdapter {
                 list = GuiScreen.pullComands();
                 totalComandos = list.getItems().size;
                 if(isStart()) {
-                    int wait = 50000;
+                    int wait = 50000;//trocar por maquina de estados{
                     while (wait > 0) {
                         if (wait == 50000) {
                             player.comandos(player.Parse.get(list.getItems().get(comandosRealizados)));
@@ -201,7 +201,7 @@ public class Level extends ScreenAdapter {
                             System.out.print("espera ocupada! \n");
                             wait--;
                         }
-                    }
+                    }//}trocar por maquina de estados
                     if(comandosRealizados == totalComandos){
                         setStart();
                         comandosRealizados = 0;
