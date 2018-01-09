@@ -42,6 +42,8 @@ public class Level extends ScreenAdapter {
     private AbstractGameObject obj;
     private Player player;
     private Torch objetivo;
+    private float espera = 3f;
+    private boolean inEspera = false;
 
 
     public Level(int level){
@@ -191,17 +193,18 @@ public class Level extends ScreenAdapter {
                 list = GuiScreen.pullComands();
                 totalComandos = list.getItems().size;
                 if(isStart()) {
-                    int wait = 50000;//trocar por maquina de estados{
-                    while (wait > 0) {
-                        if (wait == 50000) {
+
+                    if(!inEspera){
                             player.comandos(player.Parse.get(list.getItems().get(comandosRealizados)));
                             comandosRealizados++;
-                            wait--;
-                        }else{
-                            System.out.print("espera ocupada! \n");
-                            wait--;
-                        }
-                    }//}trocar por maquina de estados
+                            inEspera = true;
+                    }else{
+                            espera -= deltaTime;
+                            if(espera <= 0){
+                                inEspera = false;
+                                resetEspera();
+                            }
+                    }
                     if(comandosRealizados == totalComandos){
                         setStart();
                         comandosRealizados = 0;
@@ -211,6 +214,10 @@ public class Level extends ScreenAdapter {
                 System.out.print("Erro ao capturar comandos \n");
             }
         }
+
+    private void resetEspera() {
+        espera = 3f;
+    }
 
     public void render(SpriteBatch batch) {
         renderMap(batch);

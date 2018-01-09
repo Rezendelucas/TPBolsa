@@ -31,6 +31,8 @@ public class WorldController extends InputAdapter {
     private int score;
     private Game game;
     private Skin skin;
+    private float cooldown = 3f;
+    private boolean isCooldown = false;
     private boolean gameover = false;
     private int level = 0;
 
@@ -51,10 +53,14 @@ public class WorldController extends InputAdapter {
         currenteLevel = new Level(level);
     }
 
-    public void timeStop(int time, float delta){
-        while(time > 0){
-            System.out.print("espera ocupada! \n");
-            time = (int)(time - (1*delta));
+    public void timeStop(float delta){
+        if(cooldown > 0) {
+            isCooldown = true;
+            cooldown -= delta;
+            if(cooldown <= 0){
+                isCooldown = false;
+                cooldown = 5;
+            }
         }
     }
 
@@ -62,22 +68,27 @@ public class WorldController extends InputAdapter {
 
     public void update(float delta){
         if(gameover){
-            timeStop(500,delta);//999999
-            game.setScreen(new MenuScreen(game));
+            timeStop(delta);
+            if(!isCooldown) {
+                game.setScreen(new MenuScreen(game));
+            }
         }
-        if(currenteLevel.isCompleteObjective()){//verifica caso vitoria avança proxima fase
-            timeStop(500,delta);//500000
-            level++;
-            WallHelper.getInstance().dropWall();
-            GroundHelper.getInstance().dropGround();
-            currenteLevel = new Level(level);
+        else if(currenteLevel.isCompleteObjective()){//verifica caso vitoria avança proxima fase
+            timeStop(delta);
+            if(!isCooldown) {
+                level++;
+                WallHelper.getInstance().dropWall();
+                GroundHelper.getInstance().dropGround();
+                currenteLevel = new Level(level);
+            }
         }
-        if(LevelHelper.getInstance().getPlayer().getMana() <= 0){//verifica mana e outras condiçoes de game over
+        else if(LevelHelper.getInstance().getPlayer().getMana() <= 0){//verifica mana e outras condiçoes de game over
             setGameover(true);
             //reseta mundo
+        }else {
+            currenteLevel.update(delta);
+            camera.update();
         }
-        currenteLevel.update(delta);
-        camera.update();
     }
 
     //////////////////////////////////////  Classes de debug  /////////////////////////////////////
