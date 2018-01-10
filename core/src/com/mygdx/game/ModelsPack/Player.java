@@ -199,10 +199,12 @@ public class Player extends AbstractGameObject {
                 LevelHelper.getInstance().getTocha().switch_State();
                 System.out.print("pira acessa abaixo");
             }
-        }else
+        }else {
             System.out.print("nenhuma Pira encontrada");
-        System.out.print("pira nao acessa");
+            System.out.print("pira nao acessa");
+        }
     }
+
 
     public int getMana() {
         return mana;

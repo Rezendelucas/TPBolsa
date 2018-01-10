@@ -13,6 +13,7 @@ import com.mygdx.game.LevelPack.GroundHelper;
 import com.mygdx.game.LevelPack.Level;
 import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.LevelPack.WallHelper;
+import com.mygdx.game.ScreensPack.MapScreen;
 import com.mygdx.game.ScreensPack.MenuScreen;
 
 import sun.rmi.runtime.Log;
@@ -34,7 +35,6 @@ public class WorldController extends InputAdapter {
     private float cooldown = 3f;
     private boolean isCooldown = false;
     private boolean gameover = false;
-    private int level = 0;
 
     public WorldController(Game game, Skin skin){
         this.game = game;
@@ -50,7 +50,7 @@ public class WorldController extends InputAdapter {
 
     private void initLevel(){
         score = 0;
-        currenteLevel = new Level(level);
+        currenteLevel = new Level();
     }
 
     public void timeStop(float delta){
@@ -76,16 +76,18 @@ public class WorldController extends InputAdapter {
         else if(currenteLevel.isCompleteObjective()){//verifica caso vitoria avança proxima fase
             timeStop(delta);
             if(!isCooldown) {
-                level++;
+                LevelHelper.getInstance().nextLevel();
                 WallHelper.getInstance().dropWall();
                 GroundHelper.getInstance().dropGround();
-                currenteLevel = new Level(level);
+                game.setScreen(new MapScreen(game));
             }
         }
         else if(LevelHelper.getInstance().getPlayer().getMana() <= 0){//verifica mana e outras condiçoes de game over
             setGameover(true);
-            //reseta mundo
-        }else {
+            //reseta mundo checar oq precisa ser resetado para recomeçar
+        }else if(LevelHelper.getInstance().isGoToMap()) {
+            game.setScreen(new MapScreen(game));
+        }else{
             currenteLevel.update(delta);
             camera.update();
         }

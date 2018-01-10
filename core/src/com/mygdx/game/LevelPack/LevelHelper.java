@@ -18,6 +18,10 @@ public class LevelHelper {
 
     private Player player;
     private Torch tocha;
+    private int levelAtual = 0;
+    private boolean estadoAtivo;
+    private boolean goToMap = false;
+
     private int[][] level_00 = new int[][]{
         {5, 1, 1, 1, 1, 1, 1, 1, 1, 6},
         {2, 9, 0, 0, 0, 0, 0, 0, 0, 3},
@@ -123,5 +127,37 @@ public class LevelHelper {
 
     public void setTocha(Torch tocha) {
         this.tocha = tocha;
+    }
+
+    public void setEstadoAtivo(boolean estado) {
+        this.estadoAtivo = estado;
+    }
+
+    public boolean isEstadoAtivo() {
+        return estadoAtivo;
+    }
+
+    public void goToMap() {
+        goToMap = true;
+    }
+
+    public boolean isGoToMap() {
+        return goToMap;
+    }
+
+    public int getLevelAtual() {
+        return levelAtual;
+    }
+
+    public void setLevelAtual(int levelAtual) {
+        this.levelAtual = levelAtual;
+    }
+
+    public void nextLevel(){
+        this.levelAtual++;
+    }
+
+    public void previousLevel(){
+        this.levelAtual--;
     }
 }

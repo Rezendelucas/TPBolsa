@@ -1,5 +1,6 @@
 package com.mygdx.game.ScreensPack;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 
+import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.ModelsPack.Assets;
 import com.mygdx.game.UtilsPack.Constants;
 
@@ -35,8 +37,10 @@ public class GuiScreen extends ScreenAdapter {
     private final TextButton btnStart;
     private final TextButton btnPaused;
     private final TextButton btnReset;
+    private final TextButton btnMapScreen;
     private static boolean start = false;
-    private  boolean debug = true;
+    private boolean debug = true;
+    private Game game;
 
     public GuiScreen(){
         stage.setDebugAll(debug);
@@ -45,7 +49,7 @@ public class GuiScreen extends ScreenAdapter {
         grimoire = new List<String>(skin);
         grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana");
         //spell = new List<Object>(skin);
-        spell.setItems();
+        spell.setItems("Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Atear Fogo - 50 mana");
         quests = new List<String>(skin);
         //quests.setItems("nenhuma quest registrada!!!");
 
@@ -80,6 +84,11 @@ public class GuiScreen extends ScreenAdapter {
         table.add(spell).width(350).top().expand().fill().row();
 
 
+        btnMapScreen = new TextButton("MAP", skin);
+        btnMapScreen.setPosition(400,660);
+        btnMapScreen.setSize(150,50);
+        stage.addActor(btnMapScreen);
+
         btnStart = new TextButton("START", skin);
         btnStart.setPosition(560,660);
         btnStart.setSize(150,50);
@@ -95,10 +104,18 @@ public class GuiScreen extends ScreenAdapter {
         btnReset.setSize(150,50);
         stage.addActor(btnReset);
 
+        btnMapScreen.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                LevelHelper.getInstance().goToMap();
+            }
+        });
+
         btnStart.addListener(new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 start = true;
+                //btnStart.setDisabled(true);  pensar em uma forma de manter desativado enquanto estiver em espera
                 System.out.print("Play \n");
             }
         });

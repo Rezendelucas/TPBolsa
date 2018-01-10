@@ -31,6 +31,7 @@ import static com.mygdx.game.ScreensPack.GuiScreen.skin;
 public class Level extends ScreenAdapter {
 
     private static final String TAG = Level.class.getName();
+    private static final Float COOLDOWN = 1f;
 
     private final Stage stage;
     private int[][] currente_Level;
@@ -42,12 +43,12 @@ public class Level extends ScreenAdapter {
     private AbstractGameObject obj;
     private Player player;
     private Torch objetivo;
-    private float espera = 3f;
+    private float espera = COOLDOWN;
     private boolean inEspera = false;
 
 
-    public Level(int level){
-        this.level = level;
+    public Level(){
+        level = LevelHelper.getInstance().getLevelAtual();
         stage = new Stage();
         sizeX = 1f;
         sizeY = 1f;
@@ -198,10 +199,12 @@ public class Level extends ScreenAdapter {
                             player.comandos(player.Parse.get(list.getItems().get(comandosRealizados)));
                             comandosRealizados++;
                             inEspera = true;
+                            LevelHelper.getInstance().setEstadoAtivo(false);
                     }else{
                             espera -= deltaTime;
                             if(espera <= 0){
                                 inEspera = false;
+                                LevelHelper.getInstance().setEstadoAtivo(true);
                                 resetEspera();
                             }
                     }
@@ -216,7 +219,7 @@ public class Level extends ScreenAdapter {
         }
 
     private void resetEspera() {
-        espera = 3f;
+        espera = COOLDOWN;
     }
 
     public void render(SpriteBatch batch) {
@@ -240,5 +243,9 @@ public class Level extends ScreenAdapter {
 
     public boolean isCompleteObjective() {
         return objetivo.isTorch_On();
+    }
+
+    public boolean isInEspera() {
+        return inEspera;
     }
 }

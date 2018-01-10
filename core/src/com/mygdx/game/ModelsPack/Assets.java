@@ -98,6 +98,7 @@ public class Assets implements Disposable, AssetErrorListener {
             idle_right = new TextureRegion(atlas.findRegion("p_right"),4,0,28,57);
 
 
+
           //  walk = atlas.findRegion("walk");
           //  attack = atlas.findRegion("attack");
           //  die = atlas.findRegion("die");
@@ -138,7 +139,7 @@ public class Assets implements Disposable, AssetErrorListener {
         }
     }
 
-    private class AssetIcon {
+    public class AssetIcon {
         public final TextureRegion iconMana;
         public final TextureRegion iconCura;
         public final TextureRegion iconTocha;
@@ -184,35 +185,6 @@ public class Assets implements Disposable, AssetErrorListener {
 
     }
 
-    public TextureRegion getIconMana(){
-        return icons.iconMana;
-    }
-    public TextureRegion getIconCura(){
-        return icons.iconCura;
-    }
-    public TextureRegion getIconTocha(){
-        return icons.iconTocha;
-    }
-    public TextureRegion getIconEsculo(){
-        return icons.iconEsculdo;
-    }
-    public TextureRegion getIconSalto(){
-        return icons.iconSalto;
-    }
-    public TextureRegion getIconManaOff(){
-        return icons.iconManaoff;
-    }
-    public TextureRegion getIconCuraOff(){
-        return icons.iconCuraoff;
-    }
-    public TextureRegion getIconTochaOff(){
-        return icons.iconTochaoff;
-    }
-    public TextureRegion getIconEsculoOff(){
-        return icons.iconEsculdooff;
-    }
-    public TextureRegion getIconSaltoOff(){
-        return icons.iconSaltooff;
-    }
+
 }
 

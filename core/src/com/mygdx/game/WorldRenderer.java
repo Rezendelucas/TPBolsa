@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -90,12 +91,12 @@ public class WorldRenderer implements Disposable {
     private void renderSkils(SpriteBatch batch) {
         Assets.getInstance().fontes.defaultBig.draw(batch, " Powers ", 10, 75);
         if(true){//LevelHelper.getInstance().tochaDisponivel()) {
-            batch.draw(Assets.getInstance().getIconTocha(), -20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+            batch.draw(Assets.getInstance().icons.iconTocha, -20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
         }else{
-            batch.draw(Assets.getInstance().getIconTochaOff(), -20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+            batch.draw(Assets.getInstance().icons.iconTochaoff, -20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
         }
-        batch.draw(Assets.getInstance().getIconEsculoOff(), 20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
-        batch.draw(Assets.getInstance().getIconSaltoOff(), 60, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+        batch.draw(Assets.getInstance().icons.iconEsculdooff, 20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+        batch.draw(Assets.getInstance().icons.iconSaltooff, 60, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
     }
 
     private void renderGameOverMensage(SpriteBatch batch) {
@@ -111,9 +112,9 @@ public class WorldRenderer implements Disposable {
 
     private void renderGuiMana(SpriteBatch batch){
         if(LevelHelper.getInstance().getPlayer().getMana() > 0) {
-            batch.draw(Assets.getInstance().getIconMana(), -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+            batch.draw(Assets.getInstance().icons.iconMana, -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
         }else{
-            batch.draw(Assets.getInstance().getIconManaOff(), -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+            batch.draw(Assets.getInstance().icons.iconManaoff, -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
         }
         Assets.getInstance().fontes.defaultBig.draw(batch, "" + LevelHelper.getInstance().getPlayer().getMana(), 13, 50);
     }
@@ -134,10 +135,19 @@ public class WorldRenderer implements Disposable {
         fpsFont.setColor(1, 1, 1, 1); //branco
     }
 
+    public void renderMap(float deltaTime) {
+        Texture backgroundMap = new Texture("assets_utils/mapaTemp.png");
+        batch.begin();
+        batch.draw(backgroundMap,0,0);
+        batch.draw(Assets.getInstance().jogador.idle_donw,220,450,60,110);
+        batch.end();
+    }
+
     @Override
     public void dispose() {
         batch.dispose();
     }
+
 
 
 }
