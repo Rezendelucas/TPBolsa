@@ -1,5 +1,7 @@
 package com.mygdx.game.LevelPack;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.ModelsPack.Assets;
 import com.mygdx.game.ModelsPack.Ground;
 import com.mygdx.game.ModelsPack.Player;
@@ -15,9 +17,11 @@ public class LevelHelper {
 
     private static int spawn = 9;
     private static int livre = 0;
+    private static int NUMERODEFASES = 4;
 
     private Player player;
     private Torch tocha;
+    private Array<Level> fases;
     private int levelAtual = 0;
     private boolean estadoAtivo;
     private boolean goToMap = false;
@@ -78,6 +82,25 @@ public class LevelHelper {
         return instance;
     }
 
+    public void carregarFases(){
+        fases = new Array<Level>();
+        for(int i = 0; i < NUMERODEFASES; i++){
+            Level newLevel = new Level(getCurrent_Level(i),i);
+            float line = i/4;
+            if(line <= 1){
+                Vector2 vec = new Vector2(230 * (i + 1), 450);
+                newLevel.setCordenadasMapaDeProgresso(vec);
+            }else if(line <= 2){
+                Vector2 vec = new Vector2(230 * (i + 1), 350);
+                newLevel.setCordenadasMapaDeProgresso(vec);
+            }else if(line <= 3){
+                Vector2 vec = new Vector2(230 * (i + 1), 250);
+                newLevel.setCordenadasMapaDeProgresso(vec);
+            }
+            fases.add(newLevel);
+        }
+    }
+
     public int[][] getCurrent_Level(int level) {
         switch (level) {
             case 0:
@@ -96,17 +119,27 @@ public class LevelHelper {
     }
 
     public boolean getObjectInCoordinates(int x, int y){
-        if(level_00[x+5][y+7] == livre ||  level_00[x+5][y+7] == spawn )
-            return true;
-        else
-            return false;
+        for(Level lvl: fases) {
+            if(lvl.getNumeroLevel()==getLevelAtual()){
+                if (lvl.getMapa()[x + 5][y + 7] == livre ||  lvl.getMapa()[x+5][y+7] == spawn )
+                    return true;
+                else
+                    return false;
+            }
+        }
+        return false;
     }
 
     public boolean getObjectInCoordinates(int x, int y, int object){
-        if(level_00[x+5][y+7] == object )
-            return true;
-        else
-            return false;
+        for(Level lvl: fases) {
+            if(lvl.getNumeroLevel()==getLevelAtual()){
+                if (lvl.getMapa()[x + 5][y + 7] == object )
+                     return true;
+                else
+                     return false;
+            }
+        }
+        return false;
     }
 
     public void setCurrent_Level(int[][] current_Level) {
@@ -141,6 +174,8 @@ public class LevelHelper {
         goToMap = true;
     }
 
+    public void goToMap(Boolean status) { goToMap = status;}
+
     public boolean isGoToMap() {
         return goToMap;
     }
@@ -159,5 +194,18 @@ public class LevelHelper {
 
     public void previousLevel(){
         this.levelAtual--;
+    }
+
+    public Level getFases(int level) {
+        for(Level lvl: fases) {
+            if (lvl.getNumeroLevel() == level) {
+                return lvl;
+            }
+        }
+        return null;
+    }
+
+    public Array<Level> getFases(){
+        return fases;
     }
 }

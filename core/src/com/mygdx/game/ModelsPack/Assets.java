@@ -150,6 +150,7 @@ public class Assets implements Disposable, AssetErrorListener {
         public final TextureRegion iconTochaoff;
         public final TextureRegion iconEsculdooff;
         public final TextureRegion iconSaltooff;
+        public final TextureRegion iconeDungeonLevel;
 
         public AssetIcon(TextureAtlas atlas){
             iconMana = new TextureRegion(atlas.findRegion("spells"),191,0,49,45);
@@ -162,6 +163,8 @@ public class Assets implements Disposable, AssetErrorListener {
             iconTochaoff = new TextureRegion(atlas.findRegion("spellsOff"),49,0,47,45);
             iconEsculdooff = new TextureRegion(atlas.findRegion("spellsOff"),98,0,47,45);
             iconSaltooff = new TextureRegion(atlas.findRegion("spellsOff"),146,0,47,45);
+            iconeDungeonLevel = new TextureRegion(atlas.findRegion("dungeon"),0,0,85,71);
+
         }
     }
 

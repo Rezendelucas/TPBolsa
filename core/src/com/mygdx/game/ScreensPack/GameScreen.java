@@ -54,7 +54,8 @@ public class GameScreen extends AbstractGameScreen {
 
     @Override
     public void dispose() {
-
+        skin.dispose();
+        game.dispose();
     }
 
     @Override

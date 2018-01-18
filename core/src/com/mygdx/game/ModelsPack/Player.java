@@ -21,7 +21,7 @@ public class Player extends AbstractGameObject {
     
     public static final String TAG = Player.class.getName();
     private TextureRegion regTexture;
-    private int mana = 100;
+    private int mana = 1000;
     private int direçao = 0;
     private boolean tochaDisponivel = false;
     private float movePlayerX = 1;
@@ -94,12 +94,29 @@ public class Player extends AbstractGameObject {
                             setMana(50);
                             break;
                         case 6:
-                            //final ciclo
+                            //abrir ciclo
+                            if(getMana() < 20){break;}
+                            abrirLaço();
+                            setMana(20);
+                            break;
+                        case 7:
+                            //fechar ciclo
+                            if(getMana() < 20){break;}
+                            fecharLaço();
+                            setMana(20);
                             break;
                         default:
                             //nothing
                             break;
                     }
+    }
+
+    private void fecharLaço() {
+        System.out.print("Laço fechado \n");
+    }
+
+    private void abrirLaço() {
+        System.out.print("Laço aberto \n");
     }
 
     private void verificaFrente() {
@@ -124,7 +141,8 @@ public class Player extends AbstractGameObject {
             put("Virar a Esquerda - 10 mana",3);
             put("Golpe simples - 10 mana",4);
             put("Atear Fogo - 50 mana",5);
-            put("END",6);
+            put("Laço 'Inicio' - 20 mana",6);
+            put("Laço 'Final' - 20 mana",7);
         }
     };
 
@@ -183,25 +201,25 @@ public class Player extends AbstractGameObject {
     private void acender_Fogo() {
         if(rotation == 0 && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y, 10)) {//procura uma pira de fogo a direita(cod 10)
             LevelHelper.getInstance().getTocha().switch_State();
-            System.out.print("pira acessa a direita");
+            System.out.print("pira acessa a direita \n");
         }else if(rotation == 90 || rotation == -270) {
             if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x, (int)position.y + 1, 10)) {//cima
                 LevelHelper.getInstance().getTocha().switch_State();
-                System.out.print("pira acessa a frente");
+                System.out.print("pira acessa a frente \n");
             }
         }else if(rotation == 180 || rotation == -180) {
             if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1, (int)position.y, 10)) {//esquerda
                 LevelHelper.getInstance().getTocha().switch_State();
-                System.out.print("pira acessa a esquerda");
+                System.out.print("pira acessa a esquerda \n");
             }
         }else if(rotation == -90 || rotation == 270) {
             if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x, (int)position.y - 1, 10)) {//baixo
                 LevelHelper.getInstance().getTocha().switch_State();
-                System.out.print("pira acessa abaixo");
+                System.out.print("pira acessa abaixo \n");
             }
         }else {
-            System.out.print("nenhuma Pira encontrada");
-            System.out.print("pira nao acessa");
+            System.out.print("nenhuma Pira encontrada \n");
+            System.out.print("pira nao acessa \n");
         }
     }
 

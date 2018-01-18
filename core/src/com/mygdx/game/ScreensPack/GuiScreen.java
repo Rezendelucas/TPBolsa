@@ -47,7 +47,7 @@ public class GuiScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
 
         grimoire = new List<String>(skin);
-        grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana");
+        grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana","Laço 'Inicio' - 20 mana","Laço 'Final' - 20 mana");
         //spell = new List<Object>(skin);
         spell.setItems("Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Atear Fogo - 50 mana");
         quests = new List<String>(skin);

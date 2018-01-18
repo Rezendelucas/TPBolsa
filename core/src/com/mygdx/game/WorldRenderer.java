@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Disposable;
 
 import com.mygdx.game.LevelPack.Level;
@@ -136,10 +138,17 @@ public class WorldRenderer implements Disposable {
     }
 
     public void renderMap(float deltaTime) {
-        Texture backgroundMap = new Texture("assets_utils/mapaTemp.png");
+        Level temp = LevelHelper.getInstance().getFases(LevelHelper.getInstance().getLevelAtual());
+        float x = temp.getCordenadasMapaDeProgresso().x;
+        float y = temp.getCordenadasMapaDeProgresso().y;
+
         batch.begin();
-        batch.draw(backgroundMap,0,0);
-        batch.draw(Assets.getInstance().jogador.idle_donw,220,450,60,110);
+        for(Level lvl:LevelHelper.getInstance().getFases()) {
+            batch.draw(Assets.getInstance().icons.iconeDungeonLevel, lvl.getCordenadasMapaDeProgresso().x, lvl.getCordenadasMapaDeProgresso().y,110,100);
+            if (lvl.getNumeroLevel() == LevelHelper.getInstance().getLevelAtual()) {
+                batch.draw(Assets.getInstance().jogador.idle_donw, x-30, y, 60, 110);
+            }
+        }
         batch.end();
     }
 

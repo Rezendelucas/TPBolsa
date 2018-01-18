@@ -6,17 +6,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.LevelPack.GroundHelper;
-import com.mygdx.game.LevelPack.Level;
+import com.mygdx.game.LevelPack.LevelBuild;
 import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.LevelPack.WallHelper;
 import com.mygdx.game.ScreensPack.MapScreen;
 import com.mygdx.game.ScreensPack.MenuScreen;
-
-import sun.rmi.runtime.Log;
 
 
 /**
@@ -28,11 +24,11 @@ public class WorldController extends InputAdapter {
     private static final String TAG = WorldController.class.getName();
 
     private OrthographicCamera camera;
-    private Level currenteLevel;
+    private LevelBuild currenteLevel;
     private int score;
     private Game game;
     private Skin skin;
-    private float cooldown = 3f;
+    private float cooldown = 4f;
     private boolean isCooldown = false;
     private boolean gameover = false;
 
@@ -50,7 +46,7 @@ public class WorldController extends InputAdapter {
 
     private void initLevel(){
         score = 0;
-        currenteLevel = new Level();
+        currenteLevel = new LevelBuild();
     }
 
     public void timeStop(float delta){
@@ -79,6 +75,7 @@ public class WorldController extends InputAdapter {
                 LevelHelper.getInstance().nextLevel();
                 WallHelper.getInstance().dropWall();
                 GroundHelper.getInstance().dropGround();
+                currenteLevel.getObjetivo().switch_State();
                 game.setScreen(new MapScreen(game));
             }
         }
@@ -86,6 +83,7 @@ public class WorldController extends InputAdapter {
             setGameover(true);
             //reseta mundo checar oq precisa ser resetado para recomeçar
         }else if(LevelHelper.getInstance().isGoToMap()) {
+            LevelHelper.getInstance().goToMap(false);
             game.setScreen(new MapScreen(game));
         }else{
             currenteLevel.update(delta);
@@ -110,7 +108,7 @@ public class WorldController extends InputAdapter {
         return false;
     }
 
-    public Level getCurrenteLevel() {
+    public LevelBuild getCurrenteLevel() {
         return currenteLevel;
     }
 

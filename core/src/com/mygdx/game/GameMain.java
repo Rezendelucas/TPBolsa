@@ -9,6 +9,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 
+import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.ModelsPack.Assets;
 import com.mygdx.game.ScreensPack.MenuScreen;
 
@@ -19,6 +20,7 @@ public class GameMain extends Game {
     public void create () {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
         Assets.getInstance().init(new AssetManager());
+        LevelHelper.getInstance().carregarFases();
         setScreen(new MenuScreen(this));
     }
 
