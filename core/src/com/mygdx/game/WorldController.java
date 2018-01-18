@@ -47,6 +47,7 @@ public class WorldController extends InputAdapter {
     private void initLevel(){
         score = 0;
         currenteLevel = new LevelBuild();
+        LevelHelper.getInstance().setFaseAtual(currenteLevel);
     }
 
     public void timeStop(float delta){

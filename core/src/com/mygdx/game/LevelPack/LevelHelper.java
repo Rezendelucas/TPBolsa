@@ -21,6 +21,7 @@ public class LevelHelper {
 
     private Player player;
     private Torch tocha;
+    private LevelBuild faseAtual;
     private Array<Level> fases;
     private int levelAtual = 0;
     private boolean estadoAtivo;
@@ -194,6 +195,14 @@ public class LevelHelper {
 
     public void previousLevel(){
         this.levelAtual--;
+    }
+
+    public LevelBuild getFaseAtual() {
+        return faseAtual;
+    }
+
+    public void setFaseAtual(LevelBuild faseAtual) {
+        this.faseAtual = faseAtual;
     }
 
     public Level getFases(int level) {

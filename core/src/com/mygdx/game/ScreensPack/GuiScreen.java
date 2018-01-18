@@ -36,7 +36,8 @@ public class GuiScreen extends ScreenAdapter {
     //private final Label lblQuests;
     private final TextButton btnStart;
     private final TextButton btnPaused;
-    private final TextButton btnReset;
+    private final TextButton btnResetComandos;
+    private final TextButton btnResetFase;
     private final TextButton btnMapScreen;
     private static boolean start = false;
     private boolean debug = true;
@@ -47,7 +48,7 @@ public class GuiScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
 
         grimoire = new List<String>(skin);
-        grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana","Laço 'Inicio' - 20 mana","Laço 'Final' - 20 mana");
+        grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana","Laco 'Inicio' - 20 mana","Laco 'Final' - 20 mana");
         //spell = new List<Object>(skin);
         spell.setItems("Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Atear Fogo - 50 mana");
         quests = new List<String>(skin);
@@ -99,10 +100,15 @@ public class GuiScreen extends ScreenAdapter {
         btnPaused.setSize(150,50);
         stage.addActor(btnPaused);
 
-        btnReset = new TextButton("RESET", skin);
-        btnReset.setPosition(560,540);
-        btnReset.setSize(150,50);
-        stage.addActor(btnReset);
+        btnResetComandos = new TextButton("RESET", skin);
+        btnResetComandos.setPosition(560,540);
+        btnResetComandos.setSize(150,50);
+        stage.addActor(btnResetComandos);
+
+        btnResetFase = new TextButton("RESTART", skin);
+        btnResetFase.setPosition(400,600);
+        btnResetFase.setSize(150,50);
+        stage.addActor(btnResetFase);
 
         btnMapScreen.addListener(new ChangeListener() {
             @Override
@@ -114,9 +120,13 @@ public class GuiScreen extends ScreenAdapter {
         btnStart.addListener(new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                start = true;
-                //btnStart.setDisabled(true);  pensar em uma forma de manter desativado enquanto estiver em espera
-                System.out.print("Play \n");
+                if(!LevelHelper.getInstance().getPlayer().isLaçoAtivo()) {
+                    start = true;
+                    //btnStart.setDisabled(true);  pensar em uma forma de manter desativado enquanto estiver em espera
+                    System.out.print("Play \n");
+                }else{
+                    System.out.print("Laço em aberto na sequencia \n");
+                }
             }
         });
 
@@ -128,12 +138,19 @@ public class GuiScreen extends ScreenAdapter {
             }
         });
 
-        btnReset.addListener(new ChangeListener() {
+        btnResetComandos.addListener(new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 start = false;
                 spell.clearItems();
                 System.out.print("comandos Resetados \n");
+            }
+        });
+
+        btnResetFase.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                LevelHelper.getInstance().getFaseAtual().initLevel();
             }
         });
 
@@ -152,8 +169,9 @@ public class GuiScreen extends ScreenAdapter {
                 payload.setObject(item);  //   add no objeto de carga
                 //grimoire.getItems().removeIndex(Grimoire.getSelectedIndex());  // remove o objeto da lista de inventario, isto e desnecessario para nosso projeto
                 payload.setDragActor(new Label((String)item, skin));
-                payload.setInvalidDragActor(new Label(item + " (\"voce nao tem mana suficiente!\")", skin));
+                payload.setInvalidDragActor(new Label(item + " (\"voce nao tem requisito\")", skin));
                 payload.setValidDragActor(new Label(item + " (\"Adcionar spell\")", skin));
+
                 return payload;
             }
 
@@ -169,12 +187,22 @@ public class GuiScreen extends ScreenAdapter {
         dnd.addTarget(new DragAndDrop.Target(spell) {
             @Override
             public boolean drag(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-                return !"Touch of Death".equals(payload.getObject());
+                if(!LevelHelper.getInstance().getPlayer().isLaçoAtivo()){
+                    return !"Laco 'Final' - 20 mana".equals(payload.getObject());
+                }
+             return !"Touch of Death".equals(payload.getObject());
             }
 
             @Override
             public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                 spell.getItems().add((String) payload.getObject());
+                if(payload.getObject().toString() == "Laco 'Inicio' - 20 mana"){
+                    LevelHelper.getInstance().getPlayer().setLaçoAtivo(true);
+                    System.out.print("laço em aberto \n");
+                }
+                if(payload.getObject().toString() == "Laco 'Final' - 20 mana"){
+                    System.out.print("laço fechado \n");
+                }
             }
         });
 
@@ -201,12 +229,22 @@ public class GuiScreen extends ScreenAdapter {
         dnd2.addTarget(new DragAndDrop.Target(grimoire) {
             @Override
             public boolean drag(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
+                if(LevelHelper.getInstance().getPlayer().isLaçoAtivo()){
+                    return !"Laco 'Final' - 20 mana".equals(payload.getObject());
+                }
                 return !"Begin".equals(payload.getObject());
             }
 
             @Override
             public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                 //spell.getItems().removeIndex(spell.getSelectedIndex());
+                if(payload.getObject().toString() == "Laco 'Inicio' - 20 mana"){
+                    LevelHelper.getInstance().getPlayer().setLaçoAtivo(false);
+                    System.out.print("sem laço em aberto \n");
+                }
+                if(payload.getObject().toString() == "Laco 'Final' - 20 mana"){
+                    System.out.print("laço em aberto \n");
+                }
             }
         });
 

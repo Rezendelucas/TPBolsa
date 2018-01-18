@@ -29,12 +29,13 @@ public class LevelBuild extends ScreenAdapter {
     private static final String TAG = LevelBuild.class.getName();
     private static final Float COOLDOWN = 1f;
 
-    private final Stage stage;
+    private Stage stage;
     private Level level;
     private float sizeX;
     private float sizeY;
     private int totalComandos = 0;
-    private int comandosRealizados = 0;
+    private int comandoAtual = 0;
+    private int comandoDeReturn;
     private AbstractGameObject obj;
     private Player player;
     private Torch objetivo;
@@ -43,6 +44,10 @@ public class LevelBuild extends ScreenAdapter {
 
 
     public LevelBuild(){
+       initLevel();
+    }
+
+    public void initLevel(){
         level = LevelHelper.getInstance().getFases(LevelHelper.getInstance().getLevelAtual());
         stage = new Stage();
         sizeX = 1f;
@@ -190,8 +195,17 @@ public class LevelBuild extends ScreenAdapter {
                 if(isStart()) {
 
                     if(!inEspera){
-                            player.comandos(player.Parse.get(list.getItems().get(comandosRealizados)));
-                            comandosRealizados++;
+                            if(player.isinicioDoLaço()){
+                                comandoDeReturn = comandoAtual-1;
+                                //player.setLaçoAtivo(true);
+                                player.desativarinicioDoLaço();
+                            }
+                            if(!player.isFimDoLaço()){//verifica final do laço caso nao atenda 'comandosrealizados' volta  a ser o valor de 'caomandoDeReturn'
+                                comandoAtual = comandoDeReturn;
+                                player.desativaFimDoLaço();
+                            }
+                            player.comandos(player.Parse.get(list.getItems().get(comandoAtual)));
+                            comandoAtual++;
                             inEspera = true;
                             LevelHelper.getInstance().setEstadoAtivo(false);
                     }else{
@@ -202,9 +216,9 @@ public class LevelBuild extends ScreenAdapter {
                                 resetEspera();
                             }
                     }
-                    if(comandosRealizados == totalComandos){
+                    if(comandoAtual == totalComandos){
                         setStart();
-                        comandosRealizados = 0;
+                        comandoAtual = 0;
                     }
                 }
             }catch (Exception e){

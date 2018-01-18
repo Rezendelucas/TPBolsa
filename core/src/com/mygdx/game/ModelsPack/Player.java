@@ -18,9 +18,15 @@ public class Player extends AbstractGameObject {
     private static final int BAIXO = 1;
     private static final int ESQUERDA = 2;
     private static final int CIMA = 3;
+    private static final boolean LAÇO_OPEN = true;
+    private static final boolean LAÇO_CLOSED = false;
+
     
     public static final String TAG = Player.class.getName();
     private TextureRegion regTexture;
+    private boolean inicioDoLaço = LAÇO_CLOSED ;
+    private boolean fimDoLaço = LAÇO_CLOSED;
+    private boolean laçoAtivo = LAÇO_CLOSED;
     private int mana = 1000;
     private int direçao = 0;
     private boolean tochaDisponivel = false;
@@ -64,33 +70,33 @@ public class Player extends AbstractGameObject {
                             verificaDirecao();
                             if(getMana() < 10){break;}
                             movimento_Frente();
-                            verificaFrente();
+                            //verificaFrente();
                             setMana(10);
                             break;
                         case 2:
                             verificaDirecao();
                             if(getMana() < 10){break;}
                             girar_Direita();
-                            verificaFrente();
+                            //verificaFrente();
                             setMana(10);
                             break;
                         case 3:
                             verificaDirecao();
                             if(getMana() < 10){break;}
                             girar_Esquerda();
-                            verificaFrente();
+                            //verificaFrente();
                             setMana(10);
                             break;
                         case 4:
                             verificaDirecao();
-                            movimento_Ataque();
+                            //movimento_Ataque();
                             //render(drawBatch);
                             break;
                         case 5:
                             verificaDirecao();
                             if(getMana() < 50){break;}
                             acender_Fogo();
-                            verificaFrente();
+                            //verificaFrente();
                             setMana(50);
                             break;
                         case 6:
@@ -112,11 +118,19 @@ public class Player extends AbstractGameObject {
     }
 
     private void fecharLaço() {
-        System.out.print("Laço fechado \n");
+        System.out.print("Laco fechado \n");
+        //verifica requisito, se cumpre fecha o laço
+        if(true) {//temporariamente true
+            fimDoLaço = LAÇO_CLOSED;
+        }else{
+            fimDoLaço = LAÇO_OPEN;
+           // laçoAtivo = LAÇO_CLOSED;
+        }
     }
 
     private void abrirLaço() {
-        System.out.print("Laço aberto \n");
+        System.out.print("Laco aberto \n");
+        inicioDoLaço = LAÇO_OPEN;
     }
 
     private void verificaFrente() {
@@ -141,8 +155,8 @@ public class Player extends AbstractGameObject {
             put("Virar a Esquerda - 10 mana",3);
             put("Golpe simples - 10 mana",4);
             put("Atear Fogo - 50 mana",5);
-            put("Laço 'Inicio' - 20 mana",6);
-            put("Laço 'Final' - 20 mana",7);
+            put("Laco 'Inicio' - 20 mana",6);
+            put("Laco 'Final' - 20 mana",7);
         }
     };
 
@@ -232,4 +246,27 @@ public class Player extends AbstractGameObject {
         mana = mana - valor;
     }
 
+    public boolean isinicioDoLaço() {
+        return inicioDoLaço;
+    }
+
+    public void desativarinicioDoLaço() {
+        this.inicioDoLaço = LAÇO_CLOSED;
+    }
+
+    public boolean isFimDoLaço() {
+        return fimDoLaço;
+    }
+
+    public void desativaFimDoLaço() {
+        this.fimDoLaço = LAÇO_CLOSED;
+    }
+
+    public boolean isLaçoAtivo() {
+        return laçoAtivo;
+    }
+
+    public void setLaçoAtivo(boolean laçoAtivo) {
+        this.laçoAtivo = laçoAtivo;
+    }
 }
