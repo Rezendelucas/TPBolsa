@@ -18,15 +18,16 @@ public class Player extends AbstractGameObject {
     private static final int BAIXO = 1;
     private static final int ESQUERDA = 2;
     private static final int CIMA = 3;
-    private static final boolean LAÇO_OPEN = true;
-    private static final boolean LAÇO_CLOSED = false;
+
 
     
     public static final String TAG = Player.class.getName();
     private TextureRegion regTexture;
-    private boolean inicioDoLaço = LAÇO_CLOSED ;
-    private boolean fimDoLaço = LAÇO_CLOSED;
-    private boolean laçoAtivo = LAÇO_CLOSED;
+    private boolean inicioDoLaço = false ;
+    private boolean fimDoLaço = false;
+    private boolean laçoAberto = false;
+    private boolean laçoisfechado = true; // usado para interface saber quando o laço foi fechado
+    private String currentComando = "Nenhum comando";
     private int mana = 1000;
     private int direçao = 0;
     private boolean tochaDisponivel = false;
@@ -102,13 +103,7 @@ public class Player extends AbstractGameObject {
                         case 6:
                             //abrir ciclo
                             if(getMana() < 20){break;}
-                            abrirLaço();
-                            setMana(20);
-                            break;
-                        case 7:
-                            //fechar ciclo
-                            if(getMana() < 20){break;}
-                            fecharLaço();
+                            adicionarLaço();
                             setMana(20);
                             break;
                         default:
@@ -117,7 +112,7 @@ public class Player extends AbstractGameObject {
                     }
     }
 
-    private void fecharLaço() {
+    /*private void fecharLaço() {
         System.out.print("Laco fechado \n");
         //verifica requisito, se cumpre fecha o laço
         if(true) {//temporariamente true
@@ -127,11 +122,32 @@ public class Player extends AbstractGameObject {
            // laçoAtivo = LAÇO_CLOSED;
         }
     }
-
-    private void abrirLaço() {
-        System.out.print("Laco aberto \n");
-        inicioDoLaço = LAÇO_OPEN;
+*/
+    private void adicionarLaço() {
+        if (!inicioDoLaço && !laçoAberto) {
+            System.out.print("Laco aberto \n");
+            inicioDoLaço = true;
+            laçoAberto = true;
+        }else if(!fimDoLaço && laçoAberto){
+            System.out.print("Verifica Laco \n");
+            // "AKI" realiza a verificaçao do clausula de parada do laço
+            if(verificaçaoLaço()){
+                System.out.print("Laco fechado \n");
+                fimDoLaço = true;
+                laçoAberto = false;
+            }else{
+                System.out.print("Laco repetiçao \n");
+                fimDoLaço = true;
+                //laço continua aberto
+            }
+        }else{
+            System.out.print("erro no Laco \n");
+        }
     }
+
+    private boolean verificaçaoLaço(){
+        return false;
+    } //temporario
 
     private void verificaFrente() {
     }
@@ -155,22 +171,22 @@ public class Player extends AbstractGameObject {
             put("Virar a Esquerda - 10 mana",3);
             put("Golpe simples - 10 mana",4);
             put("Atear Fogo - 50 mana",5);
-            put("Laco 'Inicio' - 20 mana",6);
-            put("Laco 'Final' - 20 mana",7);
+            put("Laco - 20 mana",6);
+
         }
     };
 
     private void movimento_Frente() {
-        if(rotation == 0 && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y, 0)) {//direita
+        if(rotation == 0 && LevelHelper.getInstance().getObjectInCoordinates((int)position.x + 1,(int)position.y)) {//direita
             position.set(getPosition().x + movePlayerX, getPosition().y +0);
         }else if(rotation == 90 || rotation == -270) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y + 1, 0))//cima
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y + 1))//cima
                 position.set(getPosition().x + 0, getPosition().y + movePlayerY);
         }else if(rotation == 180 || rotation == -180) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1,(int)position.y, 0))//esquerda
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x - 1,(int)position.y))//esquerda
                 position.set(getPosition().x -  movePlayerY, getPosition().y + 0);
         }else if(rotation == -90 || rotation == 270) {
-            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y -1, 0))//baixo
+            if(LevelHelper.getInstance().getObjectInCoordinates((int)position.x,(int)position.y -1))//baixo
                 position.set(getPosition().x + 0, getPosition().y - movePlayerX);
         }
         System.out.print("Movimento a frente! \n");
@@ -251,7 +267,7 @@ public class Player extends AbstractGameObject {
     }
 
     public void desativarinicioDoLaço() {
-        this.inicioDoLaço = LAÇO_CLOSED;
+        this.inicioDoLaço = false;
     }
 
     public boolean isFimDoLaço() {
@@ -259,14 +275,31 @@ public class Player extends AbstractGameObject {
     }
 
     public void desativaFimDoLaço() {
-        this.fimDoLaço = LAÇO_CLOSED;
+        this.fimDoLaço = false;
     }
 
     public boolean isLaçoAtivo() {
-        return laçoAtivo;
+        return laçoAberto;
     }
 
     public void setLaçoAtivo(boolean laçoAtivo) {
-        this.laçoAtivo = laçoAtivo;
+        this.laçoAberto = laçoAtivo;
+    }
+
+    public boolean isLaçoisfechado() {
+        return laçoisfechado;
+    }
+
+    public void setLaçoisfechado() {
+        if(laçoisfechado){this.laçoisfechado = false;}
+        else{this.laçoisfechado = true;}
+    }
+
+    public String getCurrentComando() {
+        return currentComando;
+    }
+
+    public void setCurrentComando(String currentComando) {
+        this.currentComando = currentComando;
     }
 }

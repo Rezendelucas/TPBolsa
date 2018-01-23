@@ -52,7 +52,10 @@ public class LevelBuild extends ScreenAdapter {
         stage = new Stage();
         sizeX = 1f;
         sizeY = 1f;
+        inEspera = false;
+        setStart();
         initMap();
+
     }
 
     public void initMap() {
@@ -195,16 +198,16 @@ public class LevelBuild extends ScreenAdapter {
                 if(isStart()) {
 
                     if(!inEspera){
+                            player.comandos(player.Parse.get(list.getItems().get(comandoAtual)));
+                            player.setCurrentComando(list.getItems().get(comandoAtual));
                             if(player.isinicioDoLaço()){
-                                comandoDeReturn = comandoAtual-1;
-                                //player.setLaçoAtivo(true);
+                                comandoDeReturn = comandoAtual;
                                 player.desativarinicioDoLaço();
                             }
-                            if(!player.isFimDoLaço()){//verifica final do laço caso nao atenda 'comandosrealizados' volta  a ser o valor de 'caomandoDeReturn'
+                            if(player.isFimDoLaço()){//verifica final do laço caso nao atenda 'comandosrealizados' volta  a ser o valor de 'caomandoDeReturn'
                                 comandoAtual = comandoDeReturn;
                                 player.desativaFimDoLaço();
                             }
-                            player.comandos(player.Parse.get(list.getItems().get(comandoAtual)));
                             comandoAtual++;
                             inEspera = true;
                             LevelHelper.getInstance().setEstadoAtivo(false);
