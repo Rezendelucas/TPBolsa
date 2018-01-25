@@ -20,7 +20,12 @@ public class Constants {
     public static final String TEXTURE_ATLAS_LIBGDX_UI ="assets_utils/skins/uiskin.atlas";
     public static final String SKIN_LIBGDX_UI ="";
     // Fontes
-    public static   final String FONT_SOURCE = "assets_atlas/arial-15.fnt";
+    public static final String FONT_SOURCE = "assets_atlas/arial-15.fnt";
+    //Estados
+    public static final int SEM_LAÇO = 0;//nao existe um laço ativo
+    public static final int LAÇO_ABERTO = 1;//existe um laço aberto e nao fechado
+    public static final int LAÇO_FECHADO = 2;//existe um laço com clausula de parada mas sem flag final
+    public static final int LAÇO_CONCLUIDO = 3;// existe um laço ativo e bem definido
 }
 
 

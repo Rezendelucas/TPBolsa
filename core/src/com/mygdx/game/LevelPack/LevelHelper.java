@@ -190,11 +190,15 @@ public class LevelHelper {
     }
 
     public void nextLevel(){
-        this.levelAtual++;
+        if(this.levelAtual < NUMERODEFASES-1) {
+            this.levelAtual++;
+        }
     }
 
     public void previousLevel(){
-        this.levelAtual--;
+        if(this.levelAtual > 0){
+            this.levelAtual--;
+        }
     }
 
     public LevelBuild getFaseAtual() {

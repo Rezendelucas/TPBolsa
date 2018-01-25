@@ -48,7 +48,7 @@ public class GuiScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
 
         grimoire = new List<String>(skin);
-        grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana","Laco - 20 mana");
+        grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana","Laco - 20 mana","Repetir 1","Repetir 2","Repetir 3","Repetir 4");
         //spell = new List<Object>(skin);
         spell.setItems("Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Atear Fogo - 50 mana");
         quests = new List<String>(skin);
@@ -120,7 +120,7 @@ public class GuiScreen extends ScreenAdapter {
         btnStart.addListener(new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                if(LevelHelper.getInstance().getPlayer().isLaçoisfechado()) {
+                if(LevelHelper.getInstance().getPlayer().getEsperaPorClausula() == Constants.LAÇO_CONCLUIDO) {
                     start = true;
                     //btnStart.setDisabled(true);  pensar em uma forma de manter desativado enquanto estiver em espera
                     System.out.print("Play \n");
@@ -157,6 +157,7 @@ public class GuiScreen extends ScreenAdapter {
 
 
 
+
         /////////mecanismo de arrastar e soltar/////////
 
 
@@ -189,16 +190,36 @@ public class GuiScreen extends ScreenAdapter {
         dnd.addTarget(new DragAndDrop.Target(spell) {
             @Override
             public boolean drag(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-             return !"Touch of Death".equals(payload.getObject());
+                if (LevelHelper.getInstance().getPlayer().getEsperaPorClausula() == Constants.LAÇO_ABERTO ) {
+                    if(payload.getObject().equals("Repetir 1")) {
+                        return payload.getObject().equals("Repetir 1");
+                    }else if (payload.getObject().equals("Repetir 2")){
+                         return payload.getObject().equals("Repetir 2");
+                    }else if(payload.getObject().equals("Repetir 3")){
+                        return payload.getObject().equals("Repetir 3");
+                    }else if(payload.getObject().equals("Repetir 4")){
+                        return payload.getObject().equals("Repetir 4");
+                    }else{
+                        return false;
+                    }
+                }
+            return true;
+             //return !"Touch of Death".equals(payload.getObject());
             }
 
             @Override
             public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                 spell.getItems().add((String) payload.getObject());
                 if(payload.getObject().equals("Laco - 20 mana")){
-                    LevelHelper.getInstance().getPlayer().setLaçoisfechado();
+                    if( LevelHelper.getInstance().getPlayer().getEsperaPorClausula() == Constants.LAÇO_FECHADO){
+                        LevelHelper.getInstance().getPlayer().setEsperaPorClausula(Constants.LAÇO_CONCLUIDO);
+                    }else{
+                        LevelHelper.getInstance().getPlayer().setEsperaPorClausula(Constants.LAÇO_ABERTO);
+                    }
                 }
-
+                if(payload.getObject().equals("Repetir 1") || payload.getObject().equals("Repetir 2") || payload.getObject().equals("Repetir 3") || payload.getObject().equals("Repetir 4")){
+                    LevelHelper.getInstance().getPlayer().setEsperaPorClausula(Constants.LAÇO_FECHADO);
+                }
             }
         });
 
@@ -230,8 +251,7 @@ public class GuiScreen extends ScreenAdapter {
 
             @Override
             public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-                if(payload.getObject().equals("Laco - 20 mana")){
-                    LevelHelper.getInstance().getPlayer().setLaçoisfechado();
+                if(payload.getObject().equals("Laco - 20 mana")) {
                 }
                 //spell.getItems().removeIndex(spell.getSelectedIndex());
             }

@@ -3,6 +3,7 @@ package com.mygdx.game.ModelsPack;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.LevelPack.LevelHelper;
+import com.mygdx.game.UtilsPack.Constants;
 import com.mygdx.game.WorldController;
 
 import java.util.HashMap;
@@ -20,13 +21,16 @@ public class Player extends AbstractGameObject {
     private static final int CIMA = 3;
 
 
-    
     public static final String TAG = Player.class.getName();
     private TextureRegion regTexture;
     private boolean inicioDoLaço = false ;
     private boolean fimDoLaço = false;
     private boolean laçoAberto = false;
-    private boolean laçoisfechado = true; // usado para interface saber quando o laço foi fechado
+    //uso da gui
+   // private boolean laçoisfechado = true; // usado para interface saber quando o laço foi fechado
+    private int esperaPorClausula = Constants.SEM_LAÇO;// muda para true para desativar as outras opçoes da lista enquanto uma clausala d eparada nao for escolhida
+    //
+    private int repetiçao = 0;
     private String currentComando = "Nenhum comando";
     private int mana = 1000;
     private int direçao = 0;
@@ -106,6 +110,18 @@ public class Player extends AbstractGameObject {
                             adicionarLaço();
                             setMana(20);
                             break;
+                        case 7:
+                            repetiçao = 0;//repetiçao 1 = 0 pois e primeira açao n e contada
+                            break;
+                        case 8:
+                            repetiçao = 1;//repetiçao 2 = 1 pois e primeira açao n e contada
+                            break;
+                        case 9:
+                            repetiçao = 2;//repetiçao 3 = 2 pois e primeira açao n e contada
+                            break;
+                        case 10:
+                            repetiçao = 3;//repetiçao 4 = 3 pois e primeira açao n e contada
+                            break;
                         default:
                             //nothing
                             break;
@@ -124,20 +140,19 @@ public class Player extends AbstractGameObject {
     }
 */
     private void adicionarLaço() {
-        if (!inicioDoLaço && !laçoAberto) {
+        if (!inicioDoLaço && !laçoAberto) {//inserçao do laço
             System.out.print("Laco aberto \n");
             inicioDoLaço = true;
             laçoAberto = true;
-        }else if(!fimDoLaço && laçoAberto){
+        }else if(!fimDoLaço && laçoAberto){//fechamento do laço
             System.out.print("Verifica Laco \n");
-            // "AKI" realiza a verificaçao do clausula de parada do laço
+            // "AKI" realiza a verificaçao do clausula de parada do laço ao encontra um laço final ele pode:
             if(verificaçaoLaço()){
                 System.out.print("Laco fechado \n");
-                fimDoLaço = true;
-                laçoAberto = false;
+                laçoAberto = false;//encerra o laço e permanecer com o finaldolaço false para nao mais ativar a repetiçao
             }else{
-                System.out.print("Laco repetiçao \n");
-                fimDoLaço = true;
+                System.out.print("Laco continua ativo \n");
+                fimDoLaço = true;// marca o fim do laço como true para ele seja lido no controle e a repetiçao ocorra novamente
                 //laço continua aberto
             }
         }else{
@@ -146,8 +161,14 @@ public class Player extends AbstractGameObject {
     }
 
     private boolean verificaçaoLaço(){
-        return false;
-    } //temporario
+        if(repetiçao > 0){
+            repetiçao--;
+            System.out.print("Laço persiste, restam " + repetiçao + "repetiçoes");
+            return false;//laço persiste
+        }else{
+            return true;//fim do laço
+        }
+    }
 
     private void verificaFrente() {
     }
@@ -172,6 +193,10 @@ public class Player extends AbstractGameObject {
             put("Golpe simples - 10 mana",4);
             put("Atear Fogo - 50 mana",5);
             put("Laco - 20 mana",6);
+            put("Repetir 1",7);
+            put("Repetir 2",8);
+            put("Repetir 3",9);
+            put("Repetir 4",10);
 
         }
     };
@@ -285,7 +310,7 @@ public class Player extends AbstractGameObject {
     public void setLaçoAtivo(boolean laçoAtivo) {
         this.laçoAberto = laçoAtivo;
     }
-
+/*
     public boolean isLaçoisfechado() {
         return laçoisfechado;
     }
@@ -294,12 +319,28 @@ public class Player extends AbstractGameObject {
         if(laçoisfechado){this.laçoisfechado = false;}
         else{this.laçoisfechado = true;}
     }
-
+*/
     public String getCurrentComando() {
         return currentComando;
     }
 
     public void setCurrentComando(String currentComando) {
         this.currentComando = currentComando;
+    }
+
+    public int getEsperaPorClausula() {
+        return esperaPorClausula;
+    }
+
+    public void setEsperaPorClausula(int esperaPorClausula) {
+        this.esperaPorClausula = esperaPorClausula;
+    }
+
+    public int getRepetiçao() {
+        return repetiçao;
+    }
+
+    public void setRepetiçao(int repetiçao) {
+        this.repetiçao = repetiçao;
     }
 }

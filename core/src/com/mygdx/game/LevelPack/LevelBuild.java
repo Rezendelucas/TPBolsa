@@ -201,7 +201,7 @@ public class LevelBuild extends ScreenAdapter {
                             player.comandos(player.Parse.get(list.getItems().get(comandoAtual)));
                             player.setCurrentComando(list.getItems().get(comandoAtual));
                             if(player.isinicioDoLaço()){
-                                comandoDeReturn = comandoAtual;
+                                comandoDeReturn = comandoAtual+1;//+1 para voltar no comando posterio ao inicio do laço, somado ao comandoatual++ faz o laço ignorar as definiçao dos laço e so repetir os camandos em si
                                 player.desativarinicioDoLaço();
                             }
                             if(player.isFimDoLaço()){//verifica final do laço caso nao atenda 'comandosrealizados' volta  a ser o valor de 'caomandoDeReturn'
