@@ -52,7 +52,6 @@ public class WorldRenderer implements Disposable {
         renderWorld(delta);
         renderGui(batch);
         renderControlGui(delta);
-        renderComandos(batch,LevelHelper.getInstance().getPlayer().getCurrentComando());
     }
 
     private void renderControlGui(float delta) {
@@ -100,12 +99,6 @@ public class WorldRenderer implements Disposable {
         }
         batch.draw(Assets.getInstance().icons.iconEsculdooff, 20, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
         batch.draw(Assets.getInstance().icons.iconSaltooff, 60, 60, 50, 50, 100, 100, 0.35f, -0.35f, 0);
-    }
-
-    private void renderComandos(SpriteBatch batch,String comando){
-        batch.begin();
-        Assets.getInstance().fontes.defaultBig.draw(batch,comando,600,80);
-        batch.end();
     }
 
     private void renderGameOverMensage(SpriteBatch batch) {

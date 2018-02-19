@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -15,20 +17,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
+import com.mygdx.game.Comando;
 import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.ModelsPack.Assets;
 import com.mygdx.game.UtilsPack.Constants;
 
-import java.awt.Font;
+
 
 public class GuiScreen extends ScreenAdapter {
     private static final String TAG = GuiScreen.class.getName();
 
     public static final Skin skin =  new Skin(Gdx.files.internal(Constants.UISKIN));
     private Stage stage = new Stage();
-    private final List<String> grimoire;
-    private static final List<String> spell = new List<String>(skin);;
+    private final List<Comando> grimoire;
+    private static final List<Comando> spell = new List<Comando>(skin);;
     private final List<String> quests;
     private final Table table;
     private final Label lblGrimoire;
@@ -39,6 +43,9 @@ public class GuiScreen extends ScreenAdapter {
     private final TextButton btnResetComandos;
     private final TextButton btnResetFase;
     private final TextButton btnMapScreen;
+    private int repetiçao = 0;
+    private int tempcusto = 0;
+    private String tempcomando = "";
     private static boolean start = false;
     private boolean debug = true;
     private Game game;
@@ -47,10 +54,11 @@ public class GuiScreen extends ScreenAdapter {
         stage.setDebugAll(debug);
         Gdx.input.setInputProcessor(stage);
 
-        grimoire = new List<String>(skin);
-        grimoire.setItems("Avancar - 10 mana","Virar a Direita - 10 mana","Virar a Esquerda - 10 mana","Atear Fogo - 50 mana","Laco - 20 mana","Repetir 1","Repetir 2","Repetir 3","Repetir 4");
+        grimoire = new List<Comando>(skin);
+        grimoire.setItems(new Comando("Avancar",10),new Comando("Virar a Direita",10),new Comando("Virar a Esquerda", 10),new Comando("Atear Fogo", 50),new Comando("Abrir Laco",20 ),new Comando("Fechar Laco",20 ),new Comando("Repetir",0));
+        //grimoire.setItems(new Comando("Avancar",10),new Comando("Virar a Direita",10),new Comando("Virar a Esquerda", 10),new Comando("Atear Fogo", 50),new Comando("Abrir Laco",20 ),new Comando("Fechar Laco",20 ),new Comando("Repetir",0));
         //spell = new List<Object>(skin);
-        spell.setItems("Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Avancar - 10 mana","Atear Fogo - 50 mana");
+        spell.setItems(new Comando("Avancar", 10),new Comando("Avancar", 10),new Comando("Avancar",10),new Comando("Avancar", 10),new Comando("Atear Fogo", 50));
         quests = new List<String>(skin);
         //quests.setItems("nenhuma quest registrada!!!");
 
@@ -120,13 +128,9 @@ public class GuiScreen extends ScreenAdapter {
         btnStart.addListener(new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                if(LevelHelper.getInstance().getPlayer().getEsperaPorClausula() == Constants.LAÇO_CONCLUIDO) {
                     start = true;
                     //btnStart.setDisabled(true);  pensar em uma forma de manter desativado enquanto estiver em espera
                     System.out.print("Play \n");
-                }else{
-                    System.out.print("Laço em aberto\n");
-                }
             }
         });
 
@@ -171,7 +175,7 @@ public class GuiScreen extends ScreenAdapter {
                 Object item = grimoire.getSelected(); // pega o item escolhido do inventario
                 payload.setObject(item);  //   add no objeto de carga
                 //grimoire.getItems().removeIndex(Grimoire.getSelectedIndex());  // remove o objeto da lista de inventario, isto e desnecessario para nosso projeto
-                payload.setDragActor(new Label((String)item, skin));
+                payload.setDragActor(new Label(item.toString(), skin));
                 payload.setInvalidDragActor(new Label(item + " (\"voce nao tem requisito\")", skin));
                 payload.setValidDragActor(new Label(item + " (\"Adcionar spell\")", skin));
 
@@ -190,36 +194,20 @@ public class GuiScreen extends ScreenAdapter {
         dnd.addTarget(new DragAndDrop.Target(spell) {
             @Override
             public boolean drag(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-                if (LevelHelper.getInstance().getPlayer().getEsperaPorClausula() == Constants.LAÇO_ABERTO ) {
-                    if(payload.getObject().equals("Repetir 1")) {
-                        return payload.getObject().equals("Repetir 1");
-                    }else if (payload.getObject().equals("Repetir 2")){
-                         return payload.getObject().equals("Repetir 2");
-                    }else if(payload.getObject().equals("Repetir 3")){
-                        return payload.getObject().equals("Repetir 3");
-                    }else if(payload.getObject().equals("Repetir 4")){
-                        return payload.getObject().equals("Repetir 4");
-                    }else{
-                        return false;
-                    }
-                }
-            return true;
-             //return !"Touch of Death".equals(payload.getObject());
+              return !"Touch of Death".equals(payload.getObject());
             }
+
+
 
             @Override
             public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-                spell.getItems().add((String) payload.getObject());
-                if(payload.getObject().equals("Laco - 20 mana")){
-                    if( LevelHelper.getInstance().getPlayer().getEsperaPorClausula() == Constants.LAÇO_FECHADO){
-                        LevelHelper.getInstance().getPlayer().setEsperaPorClausula(Constants.LAÇO_CONCLUIDO);
-                    }else{
-                        LevelHelper.getInstance().getPlayer().setEsperaPorClausula(Constants.LAÇO_ABERTO);
-                    }
+                Comando comando = (Comando) payload.getObject();
+                if(((Comando) payload.getObject()).getComando().equals("Repetir")){
+                    openWindowForRepeat(comando.getComando(),comando.getCusto());
+                }else{
+                    spell.getItems().add(new Comando(comando.getComando(),comando.getCusto()));
                 }
-                if(payload.getObject().equals("Repetir 1") || payload.getObject().equals("Repetir 2") || payload.getObject().equals("Repetir 3") || payload.getObject().equals("Repetir 4")){
-                    LevelHelper.getInstance().getPlayer().setEsperaPorClausula(Constants.LAÇO_FECHADO);
-                }
+
             }
         });
 
@@ -233,14 +221,15 @@ public class GuiScreen extends ScreenAdapter {
                 Object item = spell.getSelected(); // pega o item escolhido do inventario
                 payload1.setObject(item);  //   add no objeto de carga
                 spell.getItems().removeIndex(spell.getSelectedIndex());  // remove o objeto da lista de inventario, isto e desnecessario para nosso projeto
-                payload1.setDragActor(new Label((String)item, skin));
+                Comando comando = (Comando) payload1.getObject();
+                payload1.setDragActor(new Label(comando.getComando(), skin));
                 return payload1;
             }
 
             @Override
             public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target) {
                 if(target == null)
-                    spell.getItems().add((String) payload.getObject()); // caso o objeto seja solto em area invalida retorna para lista de inventario
+                    spell.getItems().add((Comando) payload.getObject()); // caso o objeto seja solto em area invalida retorna para lista de inventario
             }
         });
         dnd2.addTarget(new DragAndDrop.Target(grimoire) {
@@ -258,7 +247,39 @@ public class GuiScreen extends ScreenAdapter {
         });
 
     }
-    public static List<String> pullComands() {
+
+    private void openWindowForRepeat(String comando,int custo) {
+        final Dialog entrada = new Dialog("Digite um valor",skin);
+        final Table tbl = new Table(skin);
+        final TextField txt = new TextField("",skin);
+        final TextButton btnOk = new TextButton("Ok",skin);
+
+        tempcomando = comando;
+        tempcusto = custo;
+
+        btnOk.align(1);
+        btnOk.setSize(50,50);
+
+        tbl.add(txt).top().expand().fill().row();
+        tbl.add(btnOk).top().expand().fill().row();
+
+        entrada.add(tbl);
+
+        stage.addActor(entrada);
+
+        btnOk.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                repetiçao = Integer.parseInt(txt.getText());
+                System.out.print("repetiçao setada para:  " + repetiçao + "\n");
+                entrada.hide();
+                spell.getItems().add(new Comando(tempcomando,tempcusto,repetiçao));
+            }
+        });
+
+    }
+
+    public static List<Comando> pullComands() {
         return spell;
     }
 

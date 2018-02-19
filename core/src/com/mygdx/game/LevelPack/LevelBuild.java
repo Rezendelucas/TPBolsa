@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 
+import com.mygdx.game.Comando;
 import com.mygdx.game.ModelsPack.AbstractGameObject;
 import com.mygdx.game.ModelsPack.Assets;
 import com.mygdx.game.ModelsPack.Ground;
@@ -35,7 +36,7 @@ public class LevelBuild extends ScreenAdapter {
     private float sizeY;
     private int totalComandos = 0;
     private int comandoAtual = 0;
-    private int comandoDeReturn;
+    private Comando temp;
     private AbstractGameObject obj;
     private Player player;
     private Torch objetivo;
@@ -191,22 +192,24 @@ public class LevelBuild extends ScreenAdapter {
     }
 
     public void update (float deltaTime) {
-        final List<String> list;
+        final List<Comando> list;
             try {
                 list = GuiScreen.pullComands();
                 totalComandos = list.getItems().size;
                 if(isStart()) {
 
                     if(!inEspera){
-                            player.comandos(player.Parse.get(list.getItems().get(comandoAtual)));
-                            player.setCurrentComando(list.getItems().get(comandoAtual));
-                            if(player.isinicioDoLaço()){
-                                comandoDeReturn = comandoAtual+1;//+1 para voltar no comando posterio ao inicio do laço, somado ao comandoatual++ faz o laço ignorar as definiçao dos laço e so repetir os camandos em si
-                                player.desativarinicioDoLaço();
+                            if(list.getItems().get(comandoAtual).getComando().equals("Repetir")){// caso o comando de entrada seja um comando "repetir" ele vai na classe do comando e pega o valor setado la ao criar o comando
+                                LevelHelper.getInstance().getPlayer().setRepetiçoes(list.getItems().get(comandoAtual).getRepetiçao());
+                                System.out.print("REpetiçao recebida: " + list.getItems().get(comandoAtual).getRepetiçao() + "\n");
                             }
-                            if(player.isFimDoLaço()){//verifica final do laço caso nao atenda 'comandosrealizados' volta  a ser o valor de 'caomandoDeReturn'
-                                comandoAtual = comandoDeReturn;
-                                player.desativaFimDoLaço();
+                            player.setLastComando(comandoAtual); //seta pro player qual o index do comando que sera execultado(usado para empilhamento nos laços de abertura)
+                            String tempo = list.getItems().get(comandoAtual).getComando();
+                            player.comandos(player.Parse.get(tempo));
+                            list.setSelectedIndex(comandoAtual);
+                            if(!player.getPilhaDeLacos().isEmpty() && player.isFecharLaço()){//verifica  se a pilha de laços nao esta vazia. se nao estiver ele marca o indice atual pro ultimo da pilha de laço
+                                comandoAtual = player.getPilhaDeLacos().get(player.getPilhaDeLacos().size()-1).getIndexRetorno();
+                                player.setFecharLaço(false);
                             }
                             comandoAtual++;
                             inEspera = true;
@@ -225,6 +228,7 @@ public class LevelBuild extends ScreenAdapter {
                     }
                 }
             }catch (Exception e){
+                e.printStackTrace();
                 System.out.print("Erro ao capturar comandos \n");
             }
         }

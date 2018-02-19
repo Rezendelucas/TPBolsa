@@ -2,10 +2,12 @@ package com.mygdx.game.ModelsPack;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.Laço;
 import com.mygdx.game.LevelPack.LevelHelper;
 import com.mygdx.game.UtilsPack.Constants;
 import com.mygdx.game.WorldController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,19 +25,16 @@ public class Player extends AbstractGameObject {
 
     public static final String TAG = Player.class.getName();
     private TextureRegion regTexture;
-    private boolean inicioDoLaço = false ;
-    private boolean fimDoLaço = false;
-    private boolean laçoAberto = false;
-    //uso da gui
-   // private boolean laçoisfechado = true; // usado para interface saber quando o laço foi fechado
-    private int esperaPorClausula = Constants.SEM_LAÇO;// muda para true para desativar as outras opçoes da lista enquanto uma clausala d eparada nao for escolhida
-    //
-    private int repetiçao = 0;
-    private String currentComando = "Nenhum comando";
-    private int mana = 1000;
-    private int direçao = 0;
-    private boolean tochaDisponivel = false;
-    private float movePlayerX = 1;
+
+    private boolean fecharLaço = false;
+    private int lastComando; // salva o ultimo index do ultimo comando execultado;
+    private int repetiçoes = 0;
+    private ArrayList<Laço> pilhaDeLacos = new ArrayList<Laço>();
+
+    private int mana = 1000;   //custo de uso de açoes
+    private int direçao = 0;    // direçao em que o player esta olhando
+    private boolean tochaDisponivel = false;   // a tocha esta disponivel pra ser usada
+    private float movePlayerX = 1;    // numero de casas por movimento de avançar
     private float movePlayerY = 1;
 
 
@@ -69,7 +68,7 @@ public class Player extends AbstractGameObject {
         //drawBatch.end();
     }
 
-    public void comandos(int comando) {
+    public void comandos(int comando) {//modificar posteriormente para capturar o custo de mana direto do comando ao inves de inserçao manual
                     switch (comando) {
                         case 1:
                             verificaDirecao();
@@ -105,22 +104,17 @@ public class Player extends AbstractGameObject {
                             setMana(50);
                             break;
                         case 6:
-                            //abrir ciclo
                             if(getMana() < 20){break;}
-                            adicionarLaço();
+                            abrirLaço();
                             setMana(20);
                             break;
                         case 7:
-                            repetiçao = 0;//repetiçao 1 = 0 pois e primeira açao n e contada
+                            if(getMana() < 20){break;}
+                            fecharLaço();
+                            setMana(20);
                             break;
                         case 8:
-                            repetiçao = 1;//repetiçao 2 = 1 pois e primeira açao n e contada
-                            break;
-                        case 9:
-                            repetiçao = 2;//repetiçao 3 = 2 pois e primeira açao n e contada
-                            break;
-                        case 10:
-                            repetiçao = 3;//repetiçao 4 = 3 pois e primeira açao n e contada
+                            repetiçoes();
                             break;
                         default:
                             //nothing
@@ -128,45 +122,36 @@ public class Player extends AbstractGameObject {
                     }
     }
 
-    /*private void fecharLaço() {
-        System.out.print("Laco fechado \n");
-        //verifica requisito, se cumpre fecha o laço
-        if(true) {//temporariamente true
-            fimDoLaço = LAÇO_CLOSED;
-        }else{
-            fimDoLaço = LAÇO_OPEN;
-           // laçoAtivo = LAÇO_CLOSED;
-        }
-    }
-*/
-    private void adicionarLaço() {
-        if (!inicioDoLaço && !laçoAberto) {//inserçao do laço
-            System.out.print("Laco aberto \n");
-            inicioDoLaço = true;
-            laçoAberto = true;
-        }else if(!fimDoLaço && laçoAberto){//fechamento do laço
-            System.out.print("Verifica Laco \n");
-            // "AKI" realiza a verificaçao do clausula de parada do laço ao encontra um laço final ele pode:
-            if(verificaçaoLaço()){
-                System.out.print("Laco fechado \n");
-                laçoAberto = false;//encerra o laço e permanecer com o finaldolaço false para nao mais ativar a repetiçao
-            }else{
-                System.out.print("Laco continua ativo \n");
-                fimDoLaço = true;// marca o fim do laço como true para ele seja lido no controle e a repetiçao ocorra novamente
-                //laço continua aberto
-            }
-        }else{
-            System.out.print("erro no Laco \n");
-        }
+    private void repetiçoes() {
+        System.out.print("Repetiçoes atualizadas!!!! \n");
+        pilhaDeLacos.get(pilhaDeLacos.size()-1).setNumRepetiçoes(repetiçoes);//temporariamente 1 depois recebe uma var q será setado mais tarde
     }
 
-    private boolean verificaçaoLaço(){
-        if(repetiçao > 0){
-            repetiçao--;
-            System.out.print("Laço persiste, restam " + repetiçao + "repetiçoes");
-            return false;//laço persiste
+    private void abrirLaço() {
+        System.out.print("salvar comando: " + lastComando +"\n");
+        empilhaNovoIndice(lastComando);
+    }
+
+    private void empilhaNovoIndice(int indice) {
+        Laço lc = new Laço(indice + 1);
+        System.out.print("empilhado o indice de retorno: " + (indice + 1) +"\n");
+        pilhaDeLacos.add(lc);
+    }
+
+    private void fecharLaço(){
+        fecharLaço = true;
+        if(pilhaDeLacos.get(pilhaDeLacos.size()-1).getNumRepetiçoes() == 0){
+            pilhaDeLacos.remove(pilhaDeLacos.size()-1);
+            fecharLaço = false;
+            System.out.print("Fim do laço!!! \n");
         }else{
-            return true;//fim do laço
+            int temp = pilhaDeLacos.get(pilhaDeLacos.size()-1).getNumRepetiçoes();
+            System.out.print("repetiçoes Atuais : "  +  temp + "\n");
+            temp--;
+            pilhaDeLacos.get(pilhaDeLacos.size()-1).setNumRepetiçoes(temp);
+            System.out.print("repetiçoes Atualizadas: "  +  temp + "\n");
+            System.out.print("repetiçoes restantes: "  +  pilhaDeLacos.get(pilhaDeLacos.size()-1).getNumRepetiçoes() + "\n");
+            System.out.print("retornando para o indice : " + pilhaDeLacos.get(pilhaDeLacos.size()-1).getIndexRetorno() + "\n");
         }
     }
 
@@ -187,16 +172,15 @@ public class Player extends AbstractGameObject {
 
     public Map<String , Integer> Parse = new HashMap<String , Integer>(){
         {
-            put("Avancar - 10 mana",1);
-            put("Virar a Direita - 10 mana",2);
-            put("Virar a Esquerda - 10 mana",3);
-            put("Golpe simples - 10 mana",4);
-            put("Atear Fogo - 50 mana",5);
-            put("Laco - 20 mana",6);
-            put("Repetir 1",7);
-            put("Repetir 2",8);
-            put("Repetir 3",9);
-            put("Repetir 4",10);
+            put("Avancar",1);
+            put("Virar a Direita",2);
+            put("Virar a Esquerda",3);
+            put("Golpe simples",4);
+            put("Atear Fogo",5);
+            put("Abrir Laco",6);
+            put("Fechar Laco",7);
+            put("Repetir",8);
+
 
         }
     };
@@ -287,60 +271,35 @@ public class Player extends AbstractGameObject {
         mana = mana - valor;
     }
 
-    public boolean isinicioDoLaço() {
-        return inicioDoLaço;
+    public int getLastComando() {
+        return lastComando;
     }
 
-    public void desativarinicioDoLaço() {
-        this.inicioDoLaço = false;
+    public void setLastComando(int lastComando) {
+        this.lastComando = lastComando;
     }
 
-    public boolean isFimDoLaço() {
-        return fimDoLaço;
+    public ArrayList<Laço> getPilhaDeLacos() {
+        return pilhaDeLacos;
     }
 
-    public void desativaFimDoLaço() {
-        this.fimDoLaço = false;
+    public void setPilhaDeLacos(ArrayList pilhaDeLacos) {
+        this.pilhaDeLacos = pilhaDeLacos;
     }
 
-    public boolean isLaçoAtivo() {
-        return laçoAberto;
+    public boolean isFecharLaço() {
+        return fecharLaço;
     }
 
-    public void setLaçoAtivo(boolean laçoAtivo) {
-        this.laçoAberto = laçoAtivo;
-    }
-/*
-    public boolean isLaçoisfechado() {
-        return laçoisfechado;
+    public void setFecharLaço(boolean fecharLaço) {
+        this.fecharLaço = fecharLaço;
     }
 
-    public void setLaçoisfechado() {
-        if(laçoisfechado){this.laçoisfechado = false;}
-        else{this.laçoisfechado = true;}
-    }
-*/
-    public String getCurrentComando() {
-        return currentComando;
+    public int getRepetiçoes() {
+        return repetiçoes;
     }
 
-    public void setCurrentComando(String currentComando) {
-        this.currentComando = currentComando;
-    }
-
-    public int getEsperaPorClausula() {
-        return esperaPorClausula;
-    }
-
-    public void setEsperaPorClausula(int esperaPorClausula) {
-        this.esperaPorClausula = esperaPorClausula;
-    }
-
-    public int getRepetiçao() {
-        return repetiçao;
-    }
-
-    public void setRepetiçao(int repetiçao) {
-        this.repetiçao = repetiçao;
+    public void setRepetiçoes(int repetiçoes) {
+        this.repetiçoes = repetiçoes;
     }
 }
