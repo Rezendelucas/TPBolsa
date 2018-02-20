@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import com.mygdx.game.Comando;
 import com.mygdx.game.LevelPack.LevelHelper;
-import com.mygdx.game.ModelsPack.Assets;
+import com.mygdx.game.UtilsPack.Sintaxe;
 import com.mygdx.game.UtilsPack.Constants;
 
 
@@ -30,6 +30,7 @@ public class GuiScreen extends ScreenAdapter {
     private static final String TAG = GuiScreen.class.getName();
 
     public static final Skin skin =  new Skin(Gdx.files.internal(Constants.UISKIN));
+    private Sintaxe analiseSintaxe = new Sintaxe();
     private Stage stage = new Stage();
     private final List<Comando> grimoire;
     private static final List<Comando> spell = new List<Comando>(skin);;
@@ -70,8 +71,8 @@ public class GuiScreen extends ScreenAdapter {
         stage.addActor(table);
         //table.defaults();
 
-        lblGrimoire = new Label("Grimorio", skin);
-        lblSpell = new Label("Spell",skin);
+        lblGrimoire = new Label("Comandos", skin);
+        lblSpell = new Label("Acoes",skin);
         //lblQuests = new Label("Quests",skin);
 ;
 
@@ -128,9 +129,13 @@ public class GuiScreen extends ScreenAdapter {
         btnStart.addListener(new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
+                if(analiseSintaxe.analiseSintaxeComandos(spell)) {
                     start = true;
                     //btnStart.setDisabled(true);  pensar em uma forma de manter desativado enquanto estiver em espera
                     System.out.print("Play \n");
+                }else{
+                    System.out.print("Erro ao compilar comandos!!! \n");
+                }
             }
         });
 
