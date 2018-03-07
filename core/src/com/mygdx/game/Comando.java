@@ -45,10 +45,10 @@ public class Comando {
 
     @Override
     public String toString() {
-        if(comando.equals("repetir")) {
-            return comando + " " + repetiçao + " " + custo + " Mana ";
+        if(this.comando.equals("Repetir")) {
+            return this.comando + " (" + this.repetiçao + ") " + this.custo + " Mana ";
         }else{
-            return comando + " " + custo + " Mana ";
+            return this.comando + " " + this.custo + " Mana ";
         }
     }
 }

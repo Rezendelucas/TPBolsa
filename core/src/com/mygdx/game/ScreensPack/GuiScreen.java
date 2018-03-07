@@ -33,7 +33,9 @@ public class GuiScreen extends ScreenAdapter {
     private Sintaxe analiseSintaxe = new Sintaxe();
     private Stage stage = new Stage();
     private final List<Comando> grimoire;
-    private static final List<Comando> spell = new List<Comando>(skin);;
+    private static final List<Comando> spell  = new List<Comando>(skin);
+    private static final List<Comando> spell2 = new List<Comando>(skin);
+    private static final List<Comando> spell3 = new List<Comando>(skin);
     private final List<String> quests;
     private final Table table;
     private final Label lblGrimoire;
@@ -44,6 +46,9 @@ public class GuiScreen extends ScreenAdapter {
     private final TextButton btnResetComandos;
     private final TextButton btnResetFase;
     private final TextButton btnMapScreen;
+    private final TextButton btnAbaA;
+    private final TextButton btnAbaB;
+    private final TextButton btnAbaC;
     private int repetiçao = 0;
     private int tempcusto = 0;
     private String tempcomando = "";
@@ -60,6 +65,8 @@ public class GuiScreen extends ScreenAdapter {
         //grimoire.setItems(new Comando("Avancar",10),new Comando("Virar a Direita",10),new Comando("Virar a Esquerda", 10),new Comando("Atear Fogo", 50),new Comando("Abrir Laco",20 ),new Comando("Fechar Laco",20 ),new Comando("Repetir",0));
         //spell = new List<Object>(skin);
         spell.setItems(new Comando("Avancar", 10),new Comando("Avancar", 10),new Comando("Avancar",10),new Comando("Avancar", 10),new Comando("Atear Fogo", 50));
+
+
         quests = new List<String>(skin);
         //quests.setItems("nenhuma quest registrada!!!");
 
@@ -118,6 +125,52 @@ public class GuiScreen extends ScreenAdapter {
         btnResetFase.setPosition(400,600);
         btnResetFase.setSize(150,50);
         stage.addActor(btnResetFase);
+
+        btnAbaA = new TextButton("A", skin);
+        btnAbaA.setPosition(920,520);
+        btnAbaA.setSize(50,20);
+        stage.addActor(btnAbaA);
+
+        btnAbaB = new TextButton("B", skin);
+        btnAbaB.setPosition(980,520);
+        btnAbaB.setSize(50,20);
+        stage.addActor(btnAbaB);
+
+        btnAbaC = new TextButton("C", skin);
+        btnAbaC.setPosition(1040,520);
+        btnAbaC.setSize(50,20);
+        stage.addActor(btnAbaC);
+
+
+        btnAbaA.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                spell.setVisible(true);
+                spell2.setVisible(false);
+                spell3.setVisible(false);
+            }
+        });
+
+
+        btnAbaB.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                spell.setVisible(false);
+                spell2.setVisible(true);
+                spell3.setVisible(false);
+            }
+        });
+
+        btnAbaA.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                spell.setVisible(false);
+                spell2.setVisible(false);
+                spell3.setVisible(true);
+            }
+        });
+
+
 
         btnMapScreen.addListener(new ChangeListener() {
             @Override

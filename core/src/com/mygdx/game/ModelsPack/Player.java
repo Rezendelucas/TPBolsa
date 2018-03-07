@@ -140,16 +140,14 @@ public class Player extends AbstractGameObject {
 
     private void fecharLaço(){
         fecharLaço = true;
-        if(pilhaDeLacos.get(pilhaDeLacos.size()-1).getNumRepetiçoes() == 0){
+        if(pilhaDeLacos.get(pilhaDeLacos.size()-1).getNumRepetiçoes() == 1){
             pilhaDeLacos.remove(pilhaDeLacos.size()-1);
             fecharLaço = false;
             System.out.print("Fim do laço!!! \n");
         }else{
             int temp = pilhaDeLacos.get(pilhaDeLacos.size()-1).getNumRepetiçoes();
-            System.out.print("repetiçoes Atuais : "  +  temp + "\n");
             temp--;
             pilhaDeLacos.get(pilhaDeLacos.size()-1).setNumRepetiçoes(temp);
-            System.out.print("repetiçoes Atualizadas: "  +  temp + "\n");
             System.out.print("repetiçoes restantes: "  +  pilhaDeLacos.get(pilhaDeLacos.size()-1).getNumRepetiçoes() + "\n");
             System.out.print("retornando para o indice : " + pilhaDeLacos.get(pilhaDeLacos.size()-1).getIndexRetorno() + "\n");
         }

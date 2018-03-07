@@ -85,7 +85,7 @@ public class WorldRenderer implements Disposable {
             renderGameOverMensage(batch);
         }
         renderGuiMana(batch);
-        renderSkils(batch);
+        //renderSkils(batch);
         renderGuiFpsCounter(batch);
         batch.end();
     }
