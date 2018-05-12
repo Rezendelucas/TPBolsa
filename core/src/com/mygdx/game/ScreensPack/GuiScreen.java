@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -53,7 +54,7 @@ public class GuiScreen extends ScreenAdapter {
     private int tempcusto = 0;
     private String tempcomando = "";
     private static boolean start = false;
-    private boolean debug = true;
+    private boolean debug = false;
     private Game game;
 
     public GuiScreen(){
@@ -102,7 +103,7 @@ public class GuiScreen extends ScreenAdapter {
 
 
         btnMapScreen = new TextButton("MAP", skin);
-        btnMapScreen.setPosition(400,660);
+        btnMapScreen.setPosition(400,600);
         btnMapScreen.setSize(150,50);
         stage.addActor(btnMapScreen);
 
@@ -112,17 +113,17 @@ public class GuiScreen extends ScreenAdapter {
         stage.addActor(btnStart);
 
         btnPaused = new TextButton("PAUSE", skin);
-        btnPaused.setPosition(560,600);
+        btnPaused.setPosition(720,600);
         btnPaused.setSize(150,50);
         stage.addActor(btnPaused);
 
         btnResetComandos = new TextButton("RESET", skin);
-        btnResetComandos.setPosition(560,540);
+        btnResetComandos.setPosition(720,660);
         btnResetComandos.setSize(150,50);
         stage.addActor(btnResetComandos);
 
         btnResetFase = new TextButton("RESTART", skin);
-        btnResetFase.setPosition(400,600);
+        btnResetFase.setPosition(400,660);
         btnResetFase.setSize(150,50);
         stage.addActor(btnResetFase);
 

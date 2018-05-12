@@ -55,6 +55,7 @@ public class WorldRenderer implements Disposable {
     }
 
     private void renderControlGui(float delta) {
+
         gui.render(delta);
     }
 
@@ -84,10 +85,16 @@ public class WorldRenderer implements Disposable {
         if(worldController.isGameover()){
             renderGameOverMensage(batch);
         }
+        renderWallPapersCommands(batch);
         renderGuiMana(batch);
         //renderSkils(batch);
         renderGuiFpsCounter(batch);
         batch.end();
+    }
+
+    private void renderWallPapersCommands(SpriteBatch batch) {
+        batch.draw(Assets.getInstance().paper,-15.0f,00.0f,270f,600f);
+        batch.draw(Assets.getInstance().paper,590.0f,00.0f,280f,600f);
     }
 
     private void renderSkils(SpriteBatch batch) {
@@ -114,11 +121,11 @@ public class WorldRenderer implements Disposable {
 
     private void renderGuiMana(SpriteBatch batch){
         if(LevelHelper.getInstance().getPlayer().getMana() > 0) {
-            batch.draw(Assets.getInstance().icons.iconMana, -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+            batch.draw(Assets.getInstance().icons.iconeStar, -20, 0, 50, 50, 100, 100, 0.35f, -0.35f, 0);
         }else{
-            batch.draw(Assets.getInstance().icons.iconManaoff, -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+            batch.draw(Assets.getInstance().icons.iconeStarOff, -20, -20, 50, 50, 100, 100, 0.35f, -0.35f, 0);
         }
-        Assets.getInstance().fontes.defaultBig.draw(batch, "" + LevelHelper.getInstance().getPlayer().getMana(), 13, 50);
+        Assets.getInstance().fontes.defaultBig.draw(batch, "" + LevelHelper.getInstance().getPlayer().getMana(), 13, 70);
     }
 
     private void renderGuiFpsCounter (SpriteBatch batch) {

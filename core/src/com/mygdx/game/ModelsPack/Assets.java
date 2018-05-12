@@ -31,6 +31,8 @@ public class Assets implements Disposable, AssetErrorListener {
     public AssetObject torch;
     public TextureAtlas atlas;
     public AssetIcon icons;
+    public Texture paper;
+
 
 
     public static Assets getInstance() {
@@ -62,6 +64,7 @@ public class Assets implements Disposable, AssetErrorListener {
         wall = new AssetMap(atlas);
         torch = new AssetObject(atlas);
         icons = new AssetIcon(atlas);
+        paper = new Texture("assets_atlas/mapa.png");
     }
 
     @Override
@@ -151,6 +154,8 @@ public class Assets implements Disposable, AssetErrorListener {
         public final TextureRegion iconEsculdooff;
         public final TextureRegion iconSaltooff;
         public final TextureRegion iconeDungeonLevel;
+        public final TextureRegion iconeStar;
+        public final TextureRegion iconeStarOff;
 
         public AssetIcon(TextureAtlas atlas){
             iconMana = new TextureRegion(atlas.findRegion("spells"),191,0,49,45);
@@ -164,7 +169,8 @@ public class Assets implements Disposable, AssetErrorListener {
             iconEsculdooff = new TextureRegion(atlas.findRegion("spellsOff"),98,0,47,45);
             iconSaltooff = new TextureRegion(atlas.findRegion("spellsOff"),146,0,47,45);
             iconeDungeonLevel = new TextureRegion(atlas.findRegion("dungeon"),0,0,85,71);
-
+            iconeStar = new TextureRegion(atlas.findRegion("star"),0,0,80,70);
+            iconeStarOff = new TextureRegion(atlas.findRegion("star"),95,0,95,70);
         }
     }
 
@@ -187,7 +193,6 @@ public class Assets implements Disposable, AssetErrorListener {
         }
 
     }
-
 
 }
 
